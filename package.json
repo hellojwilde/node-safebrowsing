@@ -1,0 +1,6 @@
+{
+  "name": "node-safebrowsing",
+  "devDependencies": {
+    "jest-cli": "^0.1.18"
+  },
+}
