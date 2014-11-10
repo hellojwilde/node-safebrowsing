@@ -1,6 +1,17 @@
 {
   "name": "node-safebrowsing",
   "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-jest": "^0.2.2",
+    "gulp-jstransform": "^0.1.1",
+    "gulp-regenerator": "^2.0.0",
     "jest-cli": "^0.1.18"
   },
+  "dependencies": {
+    "co": "^3.1.0",
+    "co-redis": "^1.1.0",
+    "nearley": "^1.0.1",
+    "protobufjs": "^3.8.0",
+    "redis": "^0.12.1"
+  }
 }
