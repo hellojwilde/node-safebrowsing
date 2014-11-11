@@ -18,7 +18,7 @@ gulp.task('build', ['build-js', 'build-proto']);
 
 gulp.task('test', ['build'], function(done) {
   return gulp.src('lib/**/__tests__/*.js', {read: false})
-    .pipe(mocha({reporter: 'nyan'}));
+    .pipe(mocha({reporter: 'spec'}));
 });
 
 gulp.task('watch', function() {
