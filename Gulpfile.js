@@ -8,6 +8,9 @@ gulp.task('build', function() {
     .pipe(regenerator())
     .pipe(jstransform())
     .pipe(gulp.dest('lib'));
+
+  gulp.src('src/**/*.proto')
+    .pipe(gulp.dest('lib'));
 });
 
 gulp.task('test', ['build'], function() {
