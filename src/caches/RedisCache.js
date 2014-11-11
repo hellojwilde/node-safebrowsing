@@ -51,39 +51,38 @@ class RedisCache {
     return Promise.promisify(transaction.exec, transaction)();
   }
 
-  // hasPendingSubChunk(listName, chunkID, prefix) {
-  //   return this._client.sismemberAsync(
-  //     getPendingSubKey(listName),
-  //     getPendingSubChunk(chunkID, prefix)
-  //   );
-  // }
+  hasPendingSubChunk(listName, chunkID, prefix) {
+    return this._client.sismemberAsync(
+      getPendingSubKey(listName),
+      getPendingSubChunk(chunkID, prefix)
+    ).then((hasSubChunk) => !!hasSubChunk);
+  }
 
-  // putPendingSubChunk(listName, chunkID, prefix) {
-  //   return this._client.saddAsync(
-  //     getPendingSubKey(listName), 
-  //     getPendingSubChunk(chunkID, prefix)
-  //   );
+  putPendingSubChunk(listName, chunkID, prefix) {
+    return this._client.saddAsync(
+      getPendingSubKey(listName), 
+      getPendingSubChunk(chunkID, prefix)
+    );
+  }
 
-  // }
+  dropPendingSubChunk(listName, chunkID, prefix) {
+    return this._client.sremAsync(
+      getPendingSubKey(listName),
+      getPendingSubChunk(chunkID, prefix)
+    );
+  }
 
-  // dropPendingSubChunk(listName, chunkID, prefix) {
-  //   return this._client.sremAsync(
-  //     getPendingSubKey(listName),
-  //     getPendingSubChunk(chunkID, prefix)
-  //   );
-  // }
+  isPrefixMatch(listName, prefix) {
+    return this._client.sismemberAsync(getPrefixesKey(listName), prefix);
+  }
 
-  // isPrefixMatch(listName, prefix) {
-  //   return this._client.sismemberAsync(getPrefixesKey(listName), prefix);
-  // }
+  putPrefixes(listName, prefixes) {
+    return this._client.saddAsync(getPrefixesKey(listName), prefixes);
+  }
 
-  // putPrefixes(listName, prefixes) {
-  //   return this._client.saddAsync(getPrefixesKey(listName), prefixes);
-  // }
-
-  // dropPrefixes(listName, prefixes) {
-  //   return this._client.sremAsync(getPrefixesKey(listName), prefixes);
-  // }
+  dropPrefixes(listName, prefixes) {
+    return this._client.sremAsync(getPrefixesKey(listName), prefixes);
+  }
 }
 
 module.exports = RedisCache;

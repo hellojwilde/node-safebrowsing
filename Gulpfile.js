@@ -20,7 +20,7 @@ gulp.task('build', ['build-js', 'build-proto']);
 
 gulp.task('test', ['build'], function(done) {
   return gulp.src('lib/**/__tests__/*.js', {read: false})
-    .pipe(mocha({reporter: 'spec'}));
+    .pipe(mocha({reporter: 'nyan'}));
 });
 
 gulp.task('watch', function() {
