@@ -1,6 +1,7 @@
 {
   "name": "node-safebrowsing",
   "devDependencies": {
+    "deeper": "^1.0.2",
     "expect": "^0.1.1",
     "fakeredis": "^0.2.1",
     "gulp": "^3.8.10",

@@ -58,4 +58,4 @@ number -> [0-9]:+ {%
 %}
 range  -> number "-" number     {% function(d) { return [d[0], d[2]]; } %}
 name   -> [0-9a-z\-]:+          {% function(d) { return d[0].join(''); } %}
-url    -> [A-Za-z0-9/\_\.\-%]:+ {% function(d) { return d[0].join(''); } %}
+url    -> [A-Za-z0-9/\_\.\-%\?]:+ {% function(d) { return d[0].join(''); } %}
