@@ -29,3 +29,6 @@ node_modules
 
 # Compiled directory contents
 lib
+
+# The devil.
+.DS_Store
