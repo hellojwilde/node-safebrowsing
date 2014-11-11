@@ -5,12 +5,17 @@
     "fakeredis": "^0.2.1",
     "gulp": "^3.8.10",
     "gulp-jstransform": "^0.1.1",
-    "gulp-mocha": "^1.1.1"
+    "gulp-mocha": "^1.1.1",
+    "gulp-shell": "^0.2.10"
   },
   "dependencies": {
     "bluebird": "^2.3.11",
+    "lodash": "^2.4.1",
     "nearley": "^1.0.1",
     "protobufjs": "^3.8.0",
     "redis": "^0.12.1"
+  },
+  "scripts": {
+    "test": "gulp test"
   }
 }
