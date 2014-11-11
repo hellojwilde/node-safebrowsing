@@ -73,7 +73,8 @@ class RedisCache {
   }
 
   isPrefixMatch(listName, prefix) {
-    return this._client.sismemberAsync(getPrefixesKey(listName), prefix);
+    return this._client.sismemberAsync(getPrefixesKey(listName), prefix)
+      .then((hasSubChunk) => !!hasSubChunk);
   }
 
   putPrefixes(listName, prefixes) {

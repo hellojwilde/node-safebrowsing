@@ -46,7 +46,7 @@ describe('RedisCache', function() {
     });
   });
 
-  describe('Pending Sub Chunks', function () {
+  describe('Pending Sub Chunks', function() {
     var cache = new RedisCache(FakeRedis.createClient());
     var chunkID = 4;
     var prefix = 34897234;
@@ -78,6 +78,29 @@ describe('RedisCache', function() {
       return cache.dropPendingSubChunk(listName, chunkID, prefix)
         .then(() => cache.hasPendingSubChunk(listName, chunkID, prefix))
         .then((actualHasChunk) => expect(actualHasChunk).toBe(false));
+    });
+  });
+
+  describe('Prefixes', function() {
+    var cache = new RedisCache(FakeRedis.createClient());
+    var prefix = 92374;
+    var prefixes = [98234, 93473435, 9742134, 982374198437, prefix];
+
+    it('should not match anything initially', function() {
+      return cache.isPrefixMatch(listName, prefix)
+        .then((actualHasPrefix) => expect(actualHasPrefix).toBe(false));
+    });
+
+    it('should match after we add some prefixes', function() {
+      return cache.putPrefixes(listName, prefixes)
+        .then(() => cache.isPrefixMatch(listName, prefix))
+        .then((actualHasPrefix) => expect(actualHasPrefix).toBe(true));
+    });
+
+    it('should stop matching after that prefix is dropped', function() {
+      return cache.dropPrefixes(listName, [prefix])
+        .then(() => cache.isPrefixMatch(listName, prefix))
+        .then((actualHasPrefix) => expect(actualHasPrefix).toBe(false));
     });
   });
 });
