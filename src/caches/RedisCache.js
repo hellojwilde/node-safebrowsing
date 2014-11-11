@@ -20,19 +20,41 @@ function getPrefixesKey(listName) {
   return `safe:list:${listName}:prefixes`;
 }
 
+function getPrefixDetailsKey(listName, prefix) {
+  return `safe:list:${listName}:prefix:${prefix}`;
+}
+
+function getPrefixDetailsMetadataKey(listName, prefix) {
+  return `${getPrefixDetailsKey(listName, prefix)}:metadata`;
+}
+
+function ensureArrayIfEmpty(promise) {
+  return promise.then((val) => val || []);
+}
+
+function ensureParsedJSONObject(promise) {
+  return promise.then((val) => (val) ? JSON.parse(val) : {});
+}
+
+function ensureBoolean(promise) {
+  return promise.then((val) => !!val);
+}
+
 class RedisCache {
   constructor(redisClient) {
     this._client = Promise.promisifyAll(redisClient);
   }
 
   getChunkIDs(listName) {
-    return this._client.smembersAsync(getChunkSetKey(listName))
-      .then((chunkIDs) => chunkIDs || []);
+    return ensureArrayIfEmpty(
+      this._client.smembersAsync(getChunkSetKey(listName))
+    );
   }
 
   getChunkByID(listName, chunkID) {
-    return this._client.smembersAsync(getChunkKey(listName, chunkID))
-      .then((prefixes) => prefixes || []);
+    return ensureArrayIfEmpty(
+      this._client.smembersAsync(getChunkKey(listName, chunkID))
+    );
   }
 
   putChunk(listName, chunkID, prefixes) {
@@ -73,8 +95,9 @@ class RedisCache {
   }
 
   isPrefixMatch(listName, prefix) {
-    return this._client.sismemberAsync(getPrefixesKey(listName), prefix)
-      .then((hasSubChunk) => !!hasSubChunk);
+    return ensureBoolean(
+      this._client.sismemberAsync(getPrefixesKey(listName), prefix)
+    );
   }
 
   putPrefixes(listName, prefixes) {
@@ -83,6 +106,43 @@ class RedisCache {
 
   dropPrefixes(listName, prefixes) {
     return this._client.sremAsync(getPrefixesKey(listName), prefixes);
+  }
+
+  hasPrefixDetails(listName, prefix) {
+    return ensureBoolean(
+      this._client.existsAsync(getPrefixDetailsKey(listName, prefix))
+    );
+  }
+
+  isPrefixDetailsMatch(listName, prefix, hash) {
+    return ensureBoolean(
+      this._client.sismemberAsync(getPrefixDetailsKey(listName, prefix), hash)
+    );
+  }
+
+  getPrefixDetailsMetadata(listName, prefix) {
+    return ensureParsedJSONObject(
+      this._client.getAsync(getPrefixDetailsMetadataKey(listName, prefix))
+    );
+  }
+
+  putPrefixDetails(listName, prefix, hashes, expiration, optMetadata) {
+    var prefixDetailsKey = getPrefixDetailsKey(listName, prefix);
+
+    var transaction = this._client.multi()
+      .sadd(prefixDetailsKey, hashes)
+      .expireat(prefixDetailsKey, expiration);
+
+    if (optMetadata) {
+      var prefixDetailsMetadataKey = 
+        getPrefixDetailsMetadataKey(listName, prefix);
+
+      transaction
+        .set(prefixDetailsMetadataKey, JSON.stringify(optMetadata))
+        .expireat(prefixDetailsMetadataKey, expiration);
+    }
+      
+    return Promise.promisify(transaction.exec, transaction)();
   }
 }
 

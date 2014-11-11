@@ -48,6 +48,7 @@ describe('RedisCache', function() {
 
   describe('Pending Sub Chunks', function() {
     var cache = new RedisCache(FakeRedis.createClient());
+
     var chunkID = 4;
     var prefix = 34897234;
     var additions = [
@@ -83,6 +84,7 @@ describe('RedisCache', function() {
 
   describe('Prefixes', function() {
     var cache = new RedisCache(FakeRedis.createClient());
+
     var prefix = 92374;
     var prefixes = [98234, 93473435, 9742134, 982374198437, prefix];
 
@@ -101,6 +103,46 @@ describe('RedisCache', function() {
       return cache.dropPrefixes(listName, [prefix])
         .then(() => cache.isPrefixMatch(listName, prefix))
         .then((actualHasPrefix) => expect(actualHasPrefix).toBe(false));
+    });
+  });
+
+  describe('Prefix Details', function() {
+    var cache = new RedisCache(FakeRedis.createClient());
+
+    var prefix = 92374;
+    var hash = 92374345791342987;
+    var irrelevant = [
+      9237409872314798243, 
+      923740998237487934298243,
+      923740989782347893423
+    ];
+    var relevant = irrelevant.concat(hash);
+    var meta = {woot: true};
+    var expires = Date.now() + 10000;
+
+    it('should not match or show data intiially', function() {
+      return cache.hasPrefixDetails(listName, prefix)
+        .then((actualHasPrefix) => expect(actualHasPrefix).toBe(false))
+        .then(() => cache.isPrefixDetailsMatch(listName, prefix, hash))
+        .then((actualMatch) => expect(actualMatch).toBe(false));
+    });
+
+    it('should not match but show data if irrelevant hashes', function() {
+      return cache.putPrefixDetails(listName, prefix, irrelevant, expires)
+        .then(() => cache.hasPrefixDetails(listName, prefix))
+        .then((actualHasPrefix) => expect(actualHasPrefix).toBe(true))
+        .then(() => cache.isPrefixDetailsMatch(listName, prefix, hash))
+        .then((actualMatch) => expect(actualMatch).toBe(false));
+    });
+
+    it('should match and have metadata', function() {
+      return cache.putPrefixDetails(listName, prefix, relevant, expires, meta)
+        .then(() => cache.hasPrefixDetails(listName, prefix))
+        .then((actualHasPrefix) => expect(actualHasPrefix).toBe(true))
+        .then(() => cache.isPrefixDetailsMatch(listName, prefix, hash))
+        .then((actualMatch) => expect(actualMatch).toBe(true))
+        .then(() => cache.getPrefixDetailsMetadata(listName, prefix))
+        .then((actualMeta) => expect(actualMeta).toEqual(meta))
     });
   });
 });
