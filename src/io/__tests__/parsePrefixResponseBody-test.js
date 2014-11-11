@@ -11,11 +11,11 @@ describe('parsePrefixResponseBody', function() {
       'i:acme-white-shavar\n' +
       'u:cache.google.com/second_redirect_example\n' +
       'ad:1-2,4-5,7\n' +
-      'sd:2-6\n'
+      'sd:2-6'
     );
 
     var expected = {
-      'next': 1200,
+      'delay': 1200,
       'lists': {
         'googpub-phish-shavar': {
           'url': 'cache.google.com/first_redirect_example',
