@@ -1,11 +1,12 @@
+var path = require('path');
 var gulp = require('gulp');
-var regenerator = require('gulp-regenerator');
 var jstransform = require('gulp-jstransform');
-var jest = require('gulp-jest');
+var jest = require('jest-cli');
+
+var PluginError = require('gulp-util').PluginError;
 
 gulp.task('build', function() {
   gulp.src('src/**/*.js')
-    .pipe(regenerator())
     .pipe(jstransform())
     .pipe(gulp.dest('lib'));
 
@@ -13,9 +14,15 @@ gulp.task('build', function() {
     .pipe(gulp.dest('lib'));
 });
 
-gulp.task('test', ['build'], function() {
-  gulp.src('lib/**/__tests__')
-    .pipe(jest())
+gulp.task('test', ['build'], function(done) {
+  jest.runCLI({}, path.join(__dirname, 'lib'), function(success) {
+    // From https://github.com/Dakuan/gulp-jest/blob/master/index.js,
+    // Licensed under http://opensource.org/licenses/MIT.
+    if (!success) {
+      done(new PluginError('jest', {message: 'Tests failed.'}))
+    }
+    done();
+  });
 });
 
 gulp.task('watch', function() {
