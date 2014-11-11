@@ -1,4 +1,4 @@
-jest.autoMockOff();
+var expect = require('expect');
 
 var FakeRedis = require('fakeredis');
 var Promise = require('bluebird')
@@ -8,13 +8,12 @@ describe('RedisCache', function() {
   describe('Chunks', function() {
     var listName = 'woot';
 
-    it('has empty getChunkIDs intiially', function(done) {
+    it('has empty getChunkIDs intiially', function() {
       var cache = new RedisCache(FakeRedis.createClient());
 
-      return cache.getChunkIDs('woot')
-        .then(function(chunkIDs) {
-          expect(chunkIDs).toEqual([]);
-          done();
+      return cache.getChunkIDs()
+        .then(function(actualChunkIDs) {
+          expect(actualChunkIDs).toEqual([]);
         });
     });
 
@@ -30,7 +29,7 @@ describe('RedisCache', function() {
         });
     });
 
-    it('supports dropChunkByID and updates getChunkIDs', function() {
+    it('supports dropChunkByID and updates getChunkIDs', function(done) {
       var cache = new RedisCache(FakeRedis.createClient());
       
       Promise.all([1, 2, 4].map((ID) => cache.putChunk(listName, ID, [])))
@@ -42,7 +41,7 @@ describe('RedisCache', function() {
         });
     });
 
-    it('supports getting prefixes by ID', function() {
+    it('supports getting prefixes by ID', function(done) {
       var cache = new RedisCache(FakeRedis.createClient());
       var chunkID = 4;
       var prefixes = [2, 3];
@@ -55,4 +54,8 @@ describe('RedisCache', function() {
         });
     });
   });
+
+  // describe('Pending Sub Chunks', function () {
+
+  // });
 });

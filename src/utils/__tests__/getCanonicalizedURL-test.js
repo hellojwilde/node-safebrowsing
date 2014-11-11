@@ -1,5 +1,4 @@
-jest.autoMockOff();
-
+var expect = require('expect');
 var getCanonicalizedURI = require('../getCanonicalizedURL');
 
 describe('getCanonicalizedURI', function() {

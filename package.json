@@ -1,11 +1,11 @@
 {
   "name": "node-safebrowsing",
   "devDependencies": {
+    "expect": "^0.1.1",
     "fakeredis": "^0.2.1",
     "gulp": "^3.8.10",
     "gulp-jstransform": "^0.1.1",
-    "gulp-util": "^3.0.1",
-    "jest-cli": "^0.1.18"
+    "gulp-mocha": "^1.1.1"
   },
   "dependencies": {
     "bluebird": "^2.3.11",
