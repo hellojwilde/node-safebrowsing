@@ -4,12 +4,17 @@
     "expect": "^0.1.1",
     "fakeredis": "^0.2.1",
     "gulp": "^3.8.10",
+    "gulp-dev": "0.0.2",
     "gulp-jstransform": "^0.1.1",
     "gulp-mocha": "^1.1.1",
-    "gulp-shell": "^0.2.10"
+    "gulp-shell": "^0.2.10",
+    "gulp-util": "^3.0.1",
+    "merge": "^1.2.0",
+    "through2": "^0.6.3"
   },
   "dependencies": {
     "bluebird": "^2.3.11",
+    "bytebuffer": "^3.5.4",
     "lodash": "^2.4.1",
     "nearley": "^1.0.1",
     "protobufjs": "^3.8.0",
