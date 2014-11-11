@@ -3,8 +3,6 @@ var gulp = require('gulp');
 var jstransform = require('gulp-jstransform');
 var mocha = require('gulp-mocha');
 
-var PluginError = require('gulp-util').PluginError;
-
 gulp.task('build-js', function() {
   return gulp.src('src/**/*.js')
     .pipe(jstransform())
