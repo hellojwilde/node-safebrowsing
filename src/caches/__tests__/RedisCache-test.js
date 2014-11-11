@@ -1,5 +1,6 @@
 var expect = require('expect');
 
+var ChunkTypes = require('../../io/ChunkTypes');
 var FakeRedis = require('fakeredis');
 var Promise = require('bluebird')
 var RedisCache = require('../RedisCache');
@@ -11,7 +12,7 @@ describe('RedisCache', function() {
     it('has empty getChunkIDs intiially', function() {
       var cache = new RedisCache(FakeRedis.createClient());
 
-      return cache.getChunkIDs()
+      return cache.getChunkIDs(ChunkTypes.ADD)
         .then(function(actualChunkIDs) {
           expect(actualChunkIDs).toEqual([]);
         });
@@ -21,17 +22,21 @@ describe('RedisCache', function() {
       var cache = new RedisCache(FakeRedis.createClient());
       var chunkIDs = [1, 2, 4];
 
-      return Promise.all(chunkIDs.map((ID) => cache.putChunk(listName, ID, [])))
-        .then(() => cache.getChunkIDs(listName))
+      return Promise.all(
+        chunkIDs.map((ID) => cache.putChunk(listName, ChunkTypes.ADD, ID, []))
+      )
+        .then(() => cache.getChunkIDs(listName, ChunkTypes.ADD))
         .then((actualChunkIDs) => expect(actualChunkIDs).toEqual(chunkIDs));
     });
 
     it('supports dropChunkByID and updates getChunkIDs', function() {
       var cache = new RedisCache(FakeRedis.createClient());
       
-      return Promise.all([1, 2, 4].map((ID) => cache.putChunk(listName, ID, [])))
-        .then(() => cache.dropChunkByID(listName, 2))
-        .then(() => cache.getChunkIDs(listName))
+      return Promise.all(
+        [1, 2, 4].map((ID) => cache.putChunk(listName, ChunkTypes.ADD, ID, []))
+      )
+        .then(() => cache.dropChunkByID(listName, ChunkTypes.ADD, 2))
+        .then(() => cache.getChunkIDs(listName, ChunkTypes.ADD))
         .then((actualChunkIDs) => expect(actualChunkIDs).toEqual([1, 4]));
     });
 
@@ -40,7 +45,7 @@ describe('RedisCache', function() {
       var chunkID = 4;
       var prefixes = [2, 3];
 
-      return cache.putChunk(listName, chunkID, prefixes)
+      return cache.putChunk(listName, ChunkTypes.ADD, chunkID, prefixes)
         .then(() => cache.getChunkByID(listName, chunkID))
         .then((actualPrefixes) => expect(actualPrefixes).toEqual(prefixes));
     });

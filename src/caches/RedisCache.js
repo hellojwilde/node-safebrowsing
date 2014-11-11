@@ -1,7 +1,7 @@
 var Promise = require('bluebird');
 
-function getChunkSetKey(listName) {
-  return `safe:list:${listName}:chunks`;
+function getChunkSetKey(listName, type) {
+  return `safe:list:${listName}:chunks:${type}`;
 }
 
 function getChunkKey(listName, chunkID) {
@@ -45,9 +45,9 @@ class RedisCache {
     this._client = Promise.promisifyAll(redisClient);
   }
 
-  getChunkIDs(listName) {
+  getChunkIDs(listName, type) {
     return ensureArrayIfEmpty(
-      this._client.smembersAsync(getChunkSetKey(listName))
+      this._client.zrangeAsync(getChunkSetKey(listName, type), 0, -1)
     );
   }
 
@@ -57,17 +57,17 @@ class RedisCache {
     );
   }
 
-  putChunk(listName, chunkID, prefixes) {
+  putChunk(listName, type, chunkID, prefixes) {
     var transaction = this._client.multi()
-      .sadd(getChunkSetKey(listName), chunkID)
+      .zadd(getChunkSetKey(listName, type), chunkID, chunkID)
       .sadd(getChunkKey(listName, chunkID), prefixes);
 
     return Promise.promisify(transaction.exec, transaction)();
   }
 
-  dropChunkByID(listName, chunkID) {
+  dropChunkByID(listName, type, chunkID) {
     var transaction = this._client.multi()
-      .srem(getChunkSetKey(listName), chunkID)
+      .zrem(getChunkSetKey(listName, type), chunkID)
       .del(getChunkKey(listName, chunkID));
 
     return Promise.promisify(transaction.exec, transaction)();
