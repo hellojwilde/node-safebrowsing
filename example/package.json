@@ -1,0 +1,12 @@
+{
+  "name": "node-safebrowsing-example",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "express": "~4.9.0"
+  }
+}
