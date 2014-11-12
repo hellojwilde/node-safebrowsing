@@ -89,7 +89,7 @@ app.post('/check', function(req, res) {
   matches
     .then(function(results) {
       if (results.hasInconclusive()) {
-        return Fetcher.fetchInconclusive(results.getInconclusiveRequest())
+        return fetcher.fetchInconclusive(results.getInconclusiveRequest())
           .then(function() { return results.resolveInconclusive(); });
       }
       return results;
