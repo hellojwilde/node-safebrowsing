@@ -57,11 +57,6 @@ app.post('/check', function(req, res) {
   // We can check whether something is in our cached set of list data with
   // Matcher.match. It checks the lists [GoogleMalwareList, GooglePhishingList].
   // 
-  // ## List Types
-  // 
-  // There's two levels of lists that we store on a regular basis.
-  // We stire 
-  // 
   // There's three states a list match could be in:
   // 
   //  - No match:     Not found on the prefix list. **It's clean.**
@@ -90,11 +85,6 @@ app.post('/check', function(req, res) {
   //  - `results.resolveInconclusive()` Provided that fetchInconclusive has 
   //    completed, you can call this to rematch the inconclusive lists with a 
   //    promise for new, updated (not mutated) MatchResults.
-  // 
-  // ## Wait, why all this inconclusive madness?
-  // 
-  // Remember how we said that Fetcher is supposed to be the only way to mutate
-  // our cache and that we might want to put it behind Thrift?
 
   matches
     .then(function(results) {
