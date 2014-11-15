@@ -3,6 +3,20 @@ var StringCursor = require('../StringCursor');
 var expect = require('expect');
 
 describe('StringCursor', function () {
+  describe('chomp', function() {
+    it('should return empty on empty', function() {
+      expect(new StringCursor('').chomp(5)).toBe('');
+    });
+
+    it('should return sections with no gap', function() {
+      var cursor = new StringCursor('dsfa:sadfggdfsg:');
+      expect(cursor.chomp(5)).toBe('dsfa:');
+      expect(cursor.chomp(5)).toBe('sadfg');
+      expect(cursor.chomp(5)).toBe('gdfsg');
+      expect(cursor.chomp(5)).toBe(':');
+    });
+  });
+    
   describe('chompUntil', function() {
     it('should return empty on empty', function() {
       expect(new StringCursor('').chompUntil(':')).toBe('');
@@ -14,20 +28,6 @@ describe('StringCursor', function () {
       expect(cursor.chompUntil(':')).toBe('sadfggdfsg');
       expect(cursor.chompUntil(':')).toBe('');
     })
-  });
-
-  describe('chompLength', function() {
-    it('should return empty on empty', function() {
-      expect(new StringCursor('').chompLength(5)).toBe('');
-    });
-
-    it('should return sections with no gap', function() {
-      var cursor = new StringCursor('dsfa:sadfggdfsg:');
-      expect(cursor.chompLength(5)).toBe('dsfa:');
-      expect(cursor.chompLength(5)).toBe('sadfg');
-      expect(cursor.chompLength(5)).toBe('gdfsg');
-      expect(cursor.chompLength(5)).toBe(':');
-    });
   });
 
   describe('chompWhile', function() {
@@ -50,8 +50,8 @@ describe('StringCursor', function () {
 
     it('should return remainder chomped', function() {
       var cursor = new StringCursor('dsfa:sadfggdfsg:');
-      expect(cursor.chompLength(5)).toBe('dsfa:');
-      expect(cursor.chompLength(5)).toBe('sadfg');
+      expect(cursor.chomp(5)).toBe('dsfa:');
+      expect(cursor.chomp(5)).toBe('sadfg');
       expect(cursor.chompRemaining()).toBe('gdfsg:');
     });
   });
