@@ -1,6 +1,9 @@
 var URL = require('url');
+var StringCursor = require('./StringCursor');
+var Punycode = require('punycode');
 
 var PERCENT_ESCAPE = /%([A-Fa-f0-9]{2})/g;
+var ESCAPED_CHARCODES = [35, 37];
 
 function hasPercentEscape(url) {
   return PERCENT_ESCAPE.test(url);
@@ -12,6 +15,24 @@ function getDecodedURI(uri) {
   });
 }
 
+function getEncodedCharCode(charCode) {
+  var hex = charCode.toString(16);
+  return hex.length < 2 ? '%0' + hex : '%' + hex;
+}
+
+function getEncodedURI(uri) {
+  var encodedURI = '';
+  for (var i = 0; i < uri.length; i++) {
+    var code = uri.charCodeAt(i);
+    if (code <= 32 || code >= 127 || ESCAPED_CHARCODES.indexOf(code) !== -1) {
+      encodedURI += getEncodedCharCode(code);
+    } else {
+      encodedURI += uri.charAt(i);
+    }
+  }
+  return encodedURI;
+}
+
 function getEntirelyDecodedURI(uri) {
   while(hasPercentEscape(uri)) {
     uri = getDecodedURI(uri);
@@ -20,59 +41,53 @@ function getEntirelyDecodedURI(uri) {
 }
 
 function getCanonicalizedHostname(hostname) {
-  return hostname
-    .replace(/^\.+/, '')
-    .replace(/\.+$/, '')
-    .replace(/\.+/, '.');
+  return getEncodedURI(
+    getEntirelyDecodedURI(hostname.toLowerCase())
+      .replace(/^\.+/, '')
+      .replace(/\.+$/, '')
+      .replace(/\.+/, '.')
+  );
 }
 
 function getCanonicalizedPathname(pathname) {
-  return '/' + (
-    pathname
-      .split('/')
-      .reduce(function(segments, segment) {
-        if (!segment || segment === '.') {
-          return segments;
-        } else if (segment === '..') {
-          return segments.slice(0, -1);
-        } else {
-          return segments.concat(segment);
-        }
-      }, [])
-      .join('/')
+  return getEncodedURI(
+    getEntirelyDecodedURI('/' + pathname)
+      .replace('/./', '/')
+      .replace(/[^\/]+\/\.\./, '')
+      .replace(/\/+/, '/')
   );
 }
 
 function getCanonicalizedURL(url) {
-  // 1. Remove tab, CR, and LF characters from the url.
+  url = url.trim();
   url = url.replace(/[\t\r\n]/g, '');
+  
+  var cursor = new StringCursor(url);
+  var protocol = cursor.chompUntilIfExists(':') || 'http';
+  cursor.chompWhile('/');
+  var host = cursor.chompUntil('/').split(':');
+  var hostname = host[0];
+  var port = host[1] || null;
 
-  // 2. Make the URL valid according to RFC 2396.
-  var parsedUrl = URL.parse(url);
-  if (!parsedUrl.protocol) {
-    parsedUrl = URL.parse('http://' + url);
-  }
+  var localCursor = new StringCursor(cursor.chompRemaining());
+  var pathCursor = new StringCursor(localCursor.chompUntil('#'));
+  var pathname = pathCursor.chompUntil('#');
+  var search = pathCursor.chompRemaining();
 
-  // 3. If the url ends in a fragment, remove the fragment.
-  parsedUrl.hash = null;
-  url = URL.format(parsedUrl);
-
-  // 4. Remove all percent escapes from the URL.
-  url = getEntirelyDecodedURI(url);
-
-  // 5. Canonicalize the hostname and path separately.
-  parsedUrl = URL.parse(url);
-
-  var formatted = {
-    protocol: parsedUrl.protocol,
-    slashes: true,
-    hostname: getCanonicalizedHostname(parsedUrl.hostname),
-    port: parsedUrl.port,
-    pathname: getCanonicalizedPathname(parsedUrl.pathname),
-    search: parsedUrl.search
+  var f = {
+    protocol: protocol,
+    hostname: getCanonicalizedHostname(hostname),
+    port: port,
+    pathname: getCanonicalizedPathname(pathname),
+    search: search
   };
 
-  return encodeURI(URL.format(formatted));
+  return (
+    `${f.protocol}://${f.hostname}${f.port ? ':'+f.port:''}`+
+    `${f.pathname}${search ? '?'+search:''}`
+  );
+
+  return getEncodedURI(URL.format(formatted));
 }
 
 module.exports = getCanonicalizedURL;

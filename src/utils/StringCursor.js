@@ -1,7 +1,16 @@
 var _ = require('lodash');
 
-function isPatternMatch(pattern, value) {
-  return _.isRegExp(pattern) ? pattern.test(value) : pattern === value;
+function isPatternMatch(str, pattern) {
+  return _.isRegExp(pattern) ? pattern.test(str) : pattern === str;
+}
+
+function patternMatchIndexOf(str, pattern, start) {
+  var offset = start;
+  while (!isPatternMatch(str.charAt(offset), pattern) &&
+         offset < str.length) {
+    offset++;
+  }
+  return offset;
 }
 
 class StringCursor {
@@ -12,6 +21,10 @@ class StringCursor {
 
   remaining() {
     return this._str.length - this._offset;
+  }
+
+  clear() {
+    this._offset = 0;
   }
 
   peek(length) {
@@ -28,27 +41,40 @@ class StringCursor {
     return slice;
   }
 
-  chompUntil(delimiter) {
-    var offset = this._offset;
-    while (!isPatternMatch(delimiter, this._str.charAt(offset)) && 
-           offset < this._str.length) {
-      offset++;
+  chompWhile(pattern) {
+    var lastFoundOffset = this._offset;
+    while (isPatternMatch(this._str.charAt(lastFoundOffset), pattern) &&
+           lastFoundOffset < this._str.length) {
+      lastFoundOffset++;
     }
 
-    var slice = this._str.slice(this._offset, offset);
-    this._offset = offset + 1;
+    var slice = this._str.slice(this._offset, lastFoundOffset);
+    this._offset = lastFoundOffset;
     return slice;
   }
 
-  chompWhile(allowed) {
-    var offset = this._offset;
-    while (isPatternMatch(allowed, this._str.charAt(offset)) && 
-           offset < this._str.length) {
-      offset++;
+  chompUntil(pattern) {
+    var foundOffset = patternMatchIndexOf(this._str, pattern, this._offset);
+    var slice = this._str.slice(this._offset, foundOffset);
+    this._offset = foundOffset + 1;
+    return slice;
+  }
+
+  chompUntilBefore(pattern) {
+    var foundOffset = patternMatchIndexOf(this._str, pattern, this._offset);
+    var slice = this._str.slice(this._offset, foundOffset);
+    this._offset = foundOffset;
+    return slice;
+  }
+
+  chompUntilIfExists(pattern) {
+    var foundOffset = patternMatchIndexOf(this._str, pattern, this._offset);
+    if (foundOffset === this._str.length) {
+      return null;
     }
 
-    var slice = this._str.slice(this._offset, offset);
-    this._offset = offset;
+    var slice = this._str.slice(this._offset, foundOffset);
+    this._offset = foundOffset + 1;
     return slice;
   }
 

@@ -16,7 +16,7 @@ describe('StringCursor', function () {
       expect(cursor.chomp(5)).toBe(':');
     });
   });
-    
+
   describe('chompUntil', function() {
     it('should return empty on empty', function() {
       expect(new StringCursor('').chompUntil(':')).toBe('');
@@ -27,6 +27,19 @@ describe('StringCursor', function () {
       expect(cursor.chompUntil(':')).toBe('dsfa');
       expect(cursor.chompUntil(':')).toBe('sadfggdfsg');
       expect(cursor.chompUntil(':')).toBe('');
+    })
+  });
+
+  describe('chompUntilIfExists', function() {
+    it('should return null on empty', function() {
+      expect(new StringCursor('').chompUntilIfExists(':')).toBe(null);
+    });
+
+    it('should return sections between delim, null if not', function() {
+      var cursor = new StringCursor('dsfa:sadfggdfsg:');
+      expect(cursor.chompUntilIfExists(':')).toBe('dsfa');
+      expect(cursor.chompUntilIfExists(':')).toBe('sadfggdfsg');
+      expect(cursor.chompUntilIfExists('$')).toBe(null);
     })
   });
 
