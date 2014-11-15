@@ -10,12 +10,25 @@ class StringCursor {
 
   chompUntil(delimiter) {
     var offset = this._offset;
-    while (this._str.charAt(offset) != delimiter && offset < this._str.length) {
+    while (this._str.charAt(offset) != delimiter && 
+           offset < this._str.length) {
       offset++;
     }
 
     var slice = this._str.slice(this._offset, offset);
     this._offset = offset + 1;
+    return slice;
+  }
+
+  chompWhile(allowed) {
+    var offset = this._offset;
+    while (allowed.test(this._str.charAt(offset)) && 
+           offset < this._str.length) {
+      offset++;
+    }
+
+    var slice = this._str.slice(this._offset, offset);
+    this._offset = offset;
     return slice;
   }
 

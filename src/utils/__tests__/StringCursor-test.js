@@ -30,6 +30,19 @@ describe('StringCursor', function () {
     });
   });
 
+  describe('chompWhile', function() {
+    it('should return empty on empty', function() {
+      expect(new StringCursor('').chompWhile(/[0-9]/)).toBe('');
+    });
+
+    it('should return sections with no gap', function() {
+      var cursor = new StringCursor('dsfa:sadfggdfsg:');
+      expect(cursor.chompWhile(/[a-z]/)).toBe('dsfa');
+      expect(cursor.chompWhile(/[a-z]/)).toBe('');
+      expect(cursor.chompRemaining()).toBe(':sadfggdfsg:');
+    });
+  });
+
   describe('chompRemaining', function() {
     it('should return empty on empty', function() {
       expect(new StringCursor('').chompRemaining()).toBe('');
