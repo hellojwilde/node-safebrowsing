@@ -1,6 +1,7 @@
 var path = require('path');
 var gulp = require('gulp');
 var jstransform = require('gulp-jstransform');
+var gutil = require('gulp-util');
 var nearley = require('./gulp/gulpNearley');
 var mocha = require('gulp-mocha');
 
