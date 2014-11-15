@@ -1,7 +1,7 @@
 var expect = require('expect');
 var getCanonicalizedURI = require('../getCanonicalizedURL');
 
-describe.only('getCanonicalizedURI', function() {
+describe('getCanonicalizedURI', function() {
   var testCases = [
     // {from: "http://☃-⌘.com", to: "http://xn----dqo34k.com/"},
     {from: "http://host/%25%32%35", to: "http://host/%25"},
