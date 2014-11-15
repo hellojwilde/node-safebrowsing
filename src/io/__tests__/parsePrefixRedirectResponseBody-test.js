@@ -36,7 +36,7 @@ function expectMessagesToBeEqual(actualMessage, message) {
   });
 }
 
-describe('parsePrefixRedirectResponse', function() {
+xdescribe('parsePrefixRedirectResponse', function() {
   var chunks = [
     {
       chunk_number: 2,
