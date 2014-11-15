@@ -2,12 +2,11 @@ var path = require('path');
 var gulp = require('gulp');
 var jstransform = require('gulp-jstransform');
 var gutil = require('gulp-util');
-var nearley = require('./gulp/gulpNearley');
 var mocha = require('gulp-mocha');
 
 gulp.task('build-js', function() {
   return gulp.src('src/**/*.js')
-    .pipe(jstransform())
+    .pipe(jstransform().on('error', gutil.log))
     .pipe(gulp.dest('lib'));
 });
 
@@ -16,13 +15,7 @@ gulp.task('build-proto', function() {
     .pipe(gulp.dest('lib'));
 });
 
-gulp.task('build-ne', function() {
-  return gulp.src('src/**/*.ne', {buffer: false})
-    .pipe(nearley())
-    .pipe(gulp.dest('lib'));
-})
-
-gulp.task('build', ['build-js', 'build-proto', 'build-ne']);
+gulp.task('build', ['build-js', 'build-proto']);
 
 gulp.task('test', ['build'], function(done) {
   return gulp.src('lib/**/__tests__/*.js', {read: false})
