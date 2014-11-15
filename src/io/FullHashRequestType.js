@@ -2,6 +2,7 @@ var StringCursor = require('../utils/StringCursor');
 
 var url = require('url');
 var _ = require('lodash');
+var package = require('../../package.json');
 
 var PROTOCOL_VERSION = '3.0';
 
@@ -16,7 +17,7 @@ var FullHashRequestType = {
       query: {
         client: 'api',
         key: props.apiKey,
-        appver: props.clientVersion,
+        appver: props.clientVersion || package.version,
         pver: PROTOCOL_VERSION
       }
     });

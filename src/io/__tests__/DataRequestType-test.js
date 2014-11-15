@@ -66,18 +66,20 @@ describe('DataRequestType', function() {
       var expected = {
         'delay': 1200,
         'isReset': false,
-        'lists': {
-          'googpub-phish-shavar': {
+        'lists': [
+          {
+            'name': 'googpub-phish-shavar',
             'urls': ['https://cache.google.com/first_redirect_example'],
             'expireAdd': [],
             'expireSub': [1, 2]
           },
-          'acme-white-shavar': {
+          {
+            'name': 'acme-white-shavar',
             'urls': ['https://cache.google.com/second_redirect_example'],
             'expireAdd': [[1,2], [4,5], 7],
             'expireSub': [[2, 6]]
           }
-        }
+        ]
       };
 
       expect(DataRequestType.parseResponseBody(rsp)).toEqual(expected);
@@ -103,8 +105,9 @@ describe('DataRequestType', function() {
       var expected = {
         delay: 1691,
         isReset: false,
-        lists: {
-          'goog-malware-shavar': {
+        lists: [
+          {
+            name: 'goog-malware-shavar',
             urls: [
               'https://safebrowsing-cache.google.com/safebrowsing/rd/ChNnb29nLW1hbHdhcmUtc2hhdmFyOAFAAkoMCAEQg_8IGI7_CCABSgwIARDz-QgYgf8IIAE', 
               'https://safebrowsing-cache.google.com/safebrowsing/rd/ChNnb29nLW1hbHdhcmUtc2hhdmFyOAFAAkoMCAEQzvcIGPL5CCABSgwIARCH9wgYzPcIIAFKDAgBEIX3CBiF9wggAUoMCAEQgPcIGIL3CCABSgwIARDt9ggY-_YIIAFKDAgBEPX1CBjr9gggAQ', 
@@ -121,7 +124,7 @@ describe('DataRequestType', function() {
             expireAdd: [],
             expireSub: []
           }
-        }
+        ]
       };
 
       expect(DataRequestType.parseResponseBody(rsp)).toEqual(expected);

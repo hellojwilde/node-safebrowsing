@@ -2,7 +2,7 @@ var FullHashRequestType = require('../FullHashRequestType');
 
 var expect = require('expect');
 
-describe.only('FullHashRequestType', function() {
+describe('FullHashRequestType', function() {
   describe('getRequestURL', function() {
     it('should work with the Google example', function() {
       expect(FullHashRequestType.getRequestURL({
