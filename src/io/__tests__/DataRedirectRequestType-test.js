@@ -60,7 +60,6 @@ describe('DataRedirectRequestType', function() {
       var actualChunks = DataRedirectRequestType.parseResponseBody(rsp);
 
       expect(actualChunks.length).toBe(chunks.length);
-
       chunks.forEach(function(chunk, idx) {
         expectMessagesToBeEqual(actualChunks[idx], chunk);
       });
