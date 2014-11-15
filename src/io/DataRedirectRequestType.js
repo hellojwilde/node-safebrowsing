@@ -10,7 +10,11 @@ var ChunkData =
 
 var DataRedirectRequestType = {
   getRequestURL: function(props) {
-    return 'https://' + props.url;
+    return props.url;
+  },
+
+  getRequestBody: function(props) {
+    return null;
   },
 
   parseResponseBody: function(rsp) {

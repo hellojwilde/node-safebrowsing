@@ -1,11 +1,10 @@
 var _ = require('lodash');
 var expect = require('expect');
 var path = require('path');
-var parsePrefixRedirectResponseBody = 
-  require('../parsePrefixRedirectResponseBody');
 
 var ProtoBuf = require('protobufjs');
 var ByteBuffer = require('bytebuffer');
+var DataRedirectRequestType = require('../DataRedirectRequestType');
 
 var ChunkData = 
   ProtoBuf
@@ -36,8 +35,9 @@ function expectMessagesToBeEqual(actualMessage, message) {
   });
 }
 
-xdescribe('parsePrefixRedirectResponse', function() {
-  var chunks = [
+describe('DataRedirectRequestType', function() {
+  describe('parseResponseBody', function() {
+    var chunks = [
     {
       chunk_number: 2,
       chunk_type: 0,
@@ -58,9 +58,13 @@ xdescribe('parsePrefixRedirectResponse', function() {
       chunks.map((chunk) => new ChunkData(chunk).toBuffer())
     );
 
-    var actualChunks = parsePrefixRedirectResponseBody(response);
+    var actualChunks = DataRedirectRequestType.parseResponseBody(
+      response.toBuffer().toString()
+    );
+    
     chunks.forEach(function(chunk, idx) {
       expectMessagesToBeEqual(actualChunks[idx], chunk);
     });
+  });
   });
 });
