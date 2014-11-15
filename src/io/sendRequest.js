@@ -17,8 +17,6 @@ function sendRequest(type, props) {
     options.encoding = null;
   }
 
-  console.log(options);
-
   return request(options).then(mergedType.parseResponseBody);
 }
 
