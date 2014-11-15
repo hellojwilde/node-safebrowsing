@@ -127,14 +127,4 @@ describe('DataRequestType', function() {
       expect(DataRequestType.parseResponseBody(rsp)).toEqual(expected);
     });
   });
-
-  xdescribe('@functional', function() {
-    it('should return some sort of list of chunks', function() {
-      return sendRequest(DataRequestType, {
-        apiKey: 'AIzaSyCOnX2ZZUXVCLGM8QepWmIjr7AwsPC8k-U',
-        clientVersion: '0.0.1',
-        lists: {'goog-malware-shavar': {}, 'googpub-phish-shavar': {}}
-      }).then(console.log)
-    });
-  });
 });

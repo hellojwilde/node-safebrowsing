@@ -65,14 +65,4 @@ describe('DataRedirectRequestType', function() {
       });
     });
   });
-
-  xdescribe('@functional', function() {
-    it('should work with this one URL from google', function() {
-      return sendRequest(DataRedirectRequestType, {
-        apiKey: 'AIzaSyCOnX2ZZUXVCLGM8QepWmIjr7AwsPC8k-U',
-        clientVersion: '0.0.1',
-        url: 'https://safebrowsing-cache.google.com/safebrowsing/rd/ChNnb29nLW1hbHdhcmUtc2hhdmFyOAFAAkoMCAEQg_8IGI7_CCABSgwIARDz-QgYgf8IIAE'
-      }).then(console.log)
-    });
-  })
 });
