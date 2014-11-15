@@ -19,7 +19,7 @@ var DataRedirectRequestType = {
     var buf = ByteBuffer.wrap(rsp);
     var chunks = [];
 
-    while(buf.remaining()) {
+    while (buf.remaining() > 0) {
       var size = buf.readUint32();
       var slice = buf.slice(buf.offset, buf.offset + size);
       buf.skip(size);
