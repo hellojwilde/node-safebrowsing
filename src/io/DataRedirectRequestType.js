@@ -9,23 +9,21 @@ var ChunkData =
     .build('ChunkData');
 
 var DataRedirectRequestType = {
+  isBinary: true,
+
   getRequestURL: function(props) {
     return props.url;
   },
 
-  getRequestBody: function(props) {
-    return null;
-  },
-
   parseResponseBody: function(rsp) {
-    var buf = ByteBuffer.fromBinary(rsp);
+    var buf = ByteBuffer.wrap(rsp);
     var chunks = [];
 
-    while (buf.remaining()) {
+    while(buf.remaining()) {
       var size = buf.readUint32();
       var slice = buf.slice(buf.offset, buf.offset + size);
-      chunks.push(ChunkData.decode(slice.toBuffer()));
       buf.skip(size);
+      chunks.push(ChunkData.decode(slice.toBuffer()));
     }
 
     return chunks;

@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var expect = require('expect');
 var path = require('path');
+var sendRequest = require('../sendRequest');
 
 var ProtoBuf = require('protobufjs');
 var ByteBuffer = require('bytebuffer');
@@ -11,7 +12,8 @@ var ChunkData =
     .loadProtoFile(path.join(__dirname, '..', 'ChunkData.proto'))
     .build('ChunkData');
 
-function getPrefixRedirectResponseBody(chunks) {
+function getResponseBody(chunkData) {
+  var chunks = chunkData.map((chunk) => new ChunkData(chunk).toBuffer());
   var buf = ByteBuffer.allocate(
     chunks.reduce((len, chunk) => len + chunk.length + 4, 0)
   );
@@ -21,12 +23,12 @@ function getPrefixRedirectResponseBody(chunks) {
     buf.append(chunk);
   });
 
-  return buf.reset();
+  return buf.buffer;
 }
 
 function expectMessagesToBeEqual(actualMessage, message) {
   _.forOwn(message, function(value, key) {
-    var actualValue = actualMessage.get(key);
+    var actualValue = actualMessage[key];
     if (actualValue.toBuffer) {
       expect(actualValue.toBuffer()).toEqual(value);
     } else {
@@ -38,33 +40,40 @@ function expectMessagesToBeEqual(actualMessage, message) {
 describe('DataRedirectRequestType', function() {
   describe('parseResponseBody', function() {
     var chunks = [
-    {
-      chunk_number: 2,
-      chunk_type: 0,
-      prefix_type: 0,
-      hashes: new Buffer('4h3k4h3k4h3k4h3k')
-    },
-    {
-      chunk_number: 3,
-      chunk_type: 0,
-      prefix_type: 0,
-      hashes: new Buffer('4h3k4h3k4h3k4h3k'),
-      add_numbers: [2]
-    }
-  ];
-  
-  it('should work with this contrived example', function() {
-    var response = getPrefixRedirectResponseBody(
-      chunks.map((chunk) => new ChunkData(chunk).toBuffer())
-    );
-
-    var actualChunks = DataRedirectRequestType.parseResponseBody(
-      response.toBuffer().toString()
-    );
+      {
+        chunk_number: 2,
+        chunk_type: 0,
+        prefix_type: 0,
+        hashes: new Buffer('4h3k4h3k4h3k4h3k')
+      },
+      {
+        chunk_number: 3,
+        chunk_type: 0,
+        prefix_type: 0,
+        hashes: new Buffer('4h3k4h3k4h3k4h3k'),
+        add_numbers: [2]
+      }
+    ];
     
-    chunks.forEach(function(chunk, idx) {
-      expectMessagesToBeEqual(actualChunks[idx], chunk);
+    it('should work with this contrived example', function() {
+      var rsp = getResponseBody(chunks);
+      var actualChunks = DataRedirectRequestType.parseResponseBody(rsp);
+
+      expect(actualChunks.length).toBe(chunks.length);
+
+      chunks.forEach(function(chunk, idx) {
+        expectMessagesToBeEqual(actualChunks[idx], chunk);
+      });
     });
   });
-  });
+
+  xdescribe('@functional', function() {
+    it('should work with this one URL from google', function() {
+      return sendRequest(DataRedirectRequestType, {
+        apiKey: 'AIzaSyCOnX2ZZUXVCLGM8QepWmIjr7AwsPC8k-U',
+        clientVersion: '0.0.1',
+        url: 'https://safebrowsing-cache.google.com/safebrowsing/rd/ChNnb29nLW1hbHdhcmUtc2hhdmFyOAFAAkoMCAEQg_8IGI7_CCABSgwIARDz-QgYgf8IIAE'
+      }).then(console.log)
+    });
+  })
 });
