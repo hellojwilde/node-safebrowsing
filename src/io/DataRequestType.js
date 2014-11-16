@@ -1,7 +1,6 @@
 var Ranges = require('../utils/Ranges');
 
 var _ = require('lodash');
-var invariant = require('invariant');
 var package = require('../../package.json');
 var url = require('url');
 
