@@ -83,6 +83,14 @@ class StringCursor {
     this._offset = this._str.length;
     return slice;
   }
+
+  divideRemaining(length) {
+    var slices = [];
+    while (this.remaining()) {
+      slices.push(this.chomp(length));
+    }
+    return slices;
+  }
 }
 
 module.exports = StringCursor;

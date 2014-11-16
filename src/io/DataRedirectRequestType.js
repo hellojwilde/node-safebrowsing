@@ -11,10 +11,6 @@ var ChunkData =
 var DataRedirectRequestType = {
   isBinary: true,
 
-  getRequestURL: function(props) {
-    return props.url;
-  },
-
   parseResponseBody: function(rsp) {
     var buf = ByteBuffer.wrap(rsp);
     var chunks = [];

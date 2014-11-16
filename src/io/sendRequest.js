@@ -4,7 +4,8 @@ var _ = require('lodash');
 function sendRequest(type, props) {
   var mergedType = _.merge({
     isBinary: false,
-    getRequestBody: function() { return null; },
+    getRequestURL: function(props) { return props.url; },
+    getRequestBody: function() { return null; }
   }, type);
 
   var options = {

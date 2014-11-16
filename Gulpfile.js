@@ -1,12 +1,14 @@
 var path = require('path');
 var gulp = require('gulp');
 var jstransform = require('gulp-jstransform');
+var regenerator = require('gulp-regenerator');
 var gutil = require('gulp-util');
 var mocha = require('gulp-mocha');
 
 gulp.task('build-js', function() {
   return gulp.src('src/**/*.js')
-    .pipe(jstransform().on('error', gutil.log))
+    .pipe(jstransform())
+    .pipe(regenerator())
     .pipe(gulp.dest('lib'));
 });
 

@@ -1,5 +1,7 @@
 var Promise = require('bluebird');
 
+var _ = require('lodash');
+
 function getChunkSetKey(listName, type) {
   return `safe:list:${listName}:chunks:${type}`;
 }
@@ -48,6 +50,12 @@ class RedisCache {
   getChunkIDs(listName, type) {
     return ensureArrayIfEmpty(
       this._client.zrangeAsync(getChunkSetKey(listName, type), 0, -1)
+    ).then((ids) => ids.map((id) => parseInt(id, 10)));
+  }
+
+  hasChunkID(listName, type, chunkID) {
+    return ensureBoolean(
+      this._client.zrankAsync(getChunkSetKey(listName, type), chunkID)
     );
   }
 
@@ -59,8 +67,11 @@ class RedisCache {
 
   putChunk(listName, type, chunkID, prefixes) {
     var transaction = this._client.multi()
-      .zadd(getChunkSetKey(listName, type), chunkID, chunkID)
-      .sadd(getChunkKey(listName, chunkID), prefixes);
+      .zadd(getChunkSetKey(listName, type), chunkID, chunkID);
+
+    if (prefixes.length > 0) {
+      transaction.sadd(getChunkKey(listName, chunkID), prefixes);
+    }
 
     return Promise.promisify(transaction.exec, transaction)();
   }
@@ -101,10 +112,16 @@ class RedisCache {
   }
 
   putPrefixes(listName, prefixes) {
+    if (prefixes.length === 0) {
+      return Promise.resolve();
+    }
     return this._client.saddAsync(getPrefixesKey(listName), prefixes);
   }
 
   dropPrefixes(listName, prefixes) {
+    if (prefixes.length === 0) {
+      return Promise.resolve();
+    }
     return this._client.sremAsync(getPrefixesKey(listName), prefixes);
   }
 
