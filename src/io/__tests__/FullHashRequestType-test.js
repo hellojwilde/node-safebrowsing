@@ -35,14 +35,13 @@ describe('FullHashRequestType', function() {
         '01234567890123456789012345678901'
       )).toEqual({
         delay: 600,
-        lists: {
-          'googpub-phish-shavar': [
-            {
-              hash: '01234567890123456789012345678901',
-              metadata: null
-            }
-          ]
-        }
+        lists: [
+          {
+            name: 'googpub-phish-shavar',
+            hashes: ['01234567890123456789012345678901'],
+            metadata: []
+          }
+        ]
       })
     });
 
@@ -56,31 +55,28 @@ describe('FullHashRequestType', function() {
         '01234567890123456789012345678901'
       )).toEqual({
         delay: 900,
-        lists: {
-          'goog-malware-shavar': [
-            {
-              hash: '01234567890123456789012345678901',
-              metadata: 'AA'
-            },
-            {
-              hash: '98765432109876543210987654321098',
-              metadata: 'BBB'
-            }
-          ],
-          'googpub-phish-shavar': [
-            {
-              hash: '01234567890123456789012345678901',
-              metadata: null
-            }
-          ]
-        }
+        lists: [
+          {
+            name: 'goog-malware-shavar',
+            hashes: [
+              '01234567890123456789012345678901',
+              '98765432109876543210987654321098'
+            ],
+            metadata: ['AA', 'BBB']
+          },
+          {
+            name: 'googpub-phish-shavar',
+            hashes: ['01234567890123456789012345678901'],
+            metadata: []
+          }
+        ]
       });
     });
 
     it('should work with empty response', function() {
       expect(FullHashRequestType.parseResponseBody('900')).toEqual({
         delay: 900,
-        lists: {}
+        lists: []
       })
     });
   });

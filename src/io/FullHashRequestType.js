@@ -1,8 +1,9 @@
 var StringCursor = require('../utils/StringCursor');
 
-var url = require('url');
 var _ = require('lodash');
+var assert = require('assert');
 var package = require('../../package.json');
+var url = require('url');
 
 var PROTOCOL_VERSION = '3.0';
 
@@ -24,8 +25,12 @@ var FullHashRequestType = {
   },
 
   getRequestBody: function(props) {
-    var prefixSize = props.prefixSize || 0;
     var prefixes = props.prefixes || [];
+    var prefixSizes = prefixes.map((prefix) => prefix.length);
+    var prefixSize = _.tail(prefixSizes).reduce(function (prev, cur) {
+      assert(prev === cur);
+      return cur;
+    }, _.head(prefixSizes));
 
     return [
       [prefixSize, prefixes.length * prefixSize].join(':'),
@@ -37,7 +42,7 @@ var FullHashRequestType = {
     var cursor = new StringCursor(rsp);
     var result = {
       delay: parseInt(cursor.chompUntil('\n'), 10), 
-      lists: {}
+      lists: []
     };
 
     while (cursor.remaining() > 0) {
@@ -48,11 +53,8 @@ var FullHashRequestType = {
       var hasMetadata = cursor.peek(2) === ':m';
       cursor.skip(hasMetadata ? 3 : 1);
 
-      var hashCursor = new StringCursor(cursor.chomp(hashSize * numResponses));
-      var hashes = [];
-      for (var i = 0; i < numResponses; i++) {
-        hashes.push(hashCursor.chomp(hashSize));
-      }
+      var hashes = new StringCursor(cursor.chomp(hashSize * numResponses))
+        .divideRemaining(hashSize);
 
       var metadata = [];
       if (hasMetadata) {
@@ -63,11 +65,10 @@ var FullHashRequestType = {
         }
       }
 
-      result.lists[listName] = hashes.map(function(hash, idx) {
-        return {
-          hash: hash,
-          metadata: hasMetadata ? metadata[idx] : null
-        };
+      result.lists.push({
+        name: listName,
+        hashes: hashes,
+        metadata: metadata
       });
     }
 
