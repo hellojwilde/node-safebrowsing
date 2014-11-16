@@ -4,13 +4,16 @@
   "description": "(Work in progress.) Client for the Google Safe Browsing API v3.",
   "author": "Jonathan Wilde <hello@jwilde.me>",
   "devDependencies": {
+    "coveralls": "^2.11.2",
     "expect": "^0.1.1",
     "fakeredis": "^0.2.1",
     "gulp": "^3.8.10",
     "gulp-jstransform": "hellojwilde/gulp-jstransform",
     "gulp-mocha": "^1.1.1",
     "gulp-regenerator": "^2.0.0",
-    "gulp-util": "^3.0.1"
+    "gulp-util": "^3.0.1",
+    "istanbul": "^0.3.2",
+    "mocha-lcov-reporter": "0.0.1"
   },
   "dependencies": {
     "bluebird": "^2.3.11",
