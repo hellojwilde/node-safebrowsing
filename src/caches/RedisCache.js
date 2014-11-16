@@ -22,10 +22,6 @@ function getPrefixDetailsKey(listName, prefix) {
   return `safe:list:${listName}:prefix:${prefix}`;
 }
 
-function getPrefixDetailsMetadataKey(listName, prefix) {
-  return `${getPrefixDetailsKey(listName, prefix)}:metadata`;
-}
-
 function ensureArrayIfEmpty(promise) {
   return promise.then((val) => val || []);
 }
@@ -135,31 +131,28 @@ class RedisCache {
 
   isPrefixDetailsMatch(listName, prefix, hash) {
     return ensureBoolean(
-      this._client.sismemberAsync(getPrefixDetailsKey(listName, prefix), hash)
+      this._client.hexistsAsync(getPrefixDetailsKey(listName, prefix), hash)
     );
   }
 
-  getPrefixDetailsMetadata(listName, prefix) {
+  getPrefixDetailsMetadata(listName, prefix, hash) {
     return ensureParsedJSONObject(
-      this._client.getAsync(getPrefixDetailsMetadataKey(listName, prefix))
+      this._client.hgetAsync(getPrefixDetailsKey(listName, prefix), hash)
     );
   }
 
   putPrefixDetails(listName, prefix, hashes, expiration, optMetadata) {
+    var metadata = optMetadata || [];
+    var interleaved = {};
+    hashes.forEach((hash, idx) => 
+      interleaved[hash] = JSON.stringify(metadata[idx] || {}));
+
+    console.log(interleaved);
+
     var prefixDetailsKey = getPrefixDetailsKey(listName, prefix);
-
     var transaction = this._client.multi()
-      .sadd(prefixDetailsKey, hashes)
+      .hmset(prefixDetailsKey, interleaved)
       .expireat(prefixDetailsKey, expiration);
-
-    if (optMetadata) {
-      var prefixDetailsMetadataKey = 
-        getPrefixDetailsMetadataKey(listName, prefix);
-
-      transaction
-        .set(prefixDetailsMetadataKey, JSON.stringify(optMetadata))
-        .expireat(prefixDetailsMetadataKey, expiration);
-    }
       
     return Promise.promisify(transaction.exec, transaction)();
   }

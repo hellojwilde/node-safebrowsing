@@ -123,8 +123,8 @@ describe('RedisCache', function() {
       923740998237487934298243,
       923740989782347893423
     ];
-    var relevant = irrelevant.concat(hash);
-    var meta = {woot: true};
+    var relevant = [hash];
+    var meta = [{woot: true}];
     var expires = Date.now() + 10000;
 
     it('should not match or show data intiially', function() {
@@ -148,8 +148,8 @@ describe('RedisCache', function() {
         .then((actualHasPrefix) => expect(actualHasPrefix).toBe(true))
         .then(() => cache.isPrefixDetailsMatch(listName, prefix, hash))
         .then((actualMatch) => expect(actualMatch).toBe(true))
-        .then(() => cache.getPrefixDetailsMetadata(listName, prefix))
-        .then((actualMeta) => expect(actualMeta).toEqual(meta))
+        .then(() => cache.getPrefixDetailsMetadata(listName, prefix, hash))
+        .then((actualMeta) => expect(actualMeta).toEqual(meta[0]))
     });
   });
 });
