@@ -1,6 +1,6 @@
 var expect = require('expect');
 
-var ChunkTypes = require('../../io/ChunkTypes');
+var ChunkTypes = require('../../ChunkTypes');
 var FakeRedis = require('fakeredis');
 var Promise = require('bluebird')
 var RedisCache = require('../RedisCache');
