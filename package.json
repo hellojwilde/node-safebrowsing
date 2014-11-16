@@ -1,6 +1,8 @@
 {
-  "name": "node-safebrowsing",
+  "name": "safebrowsing",
   "version": "0.1.0",
+  "description": "(WIP. Not production ready.) Client for the Google Safe Browsing API v3.",
+  "author": "Jonathan Wilde <hello@jwilde.me>",
   "devDependencies": {
     "expect": "^0.1.1",
     "fakeredis": "^0.2.1",
@@ -21,6 +23,12 @@
     "request-promise": "^0.3.1"
   },
   "scripts": {
-    "test": "gulp test"
-  }
+    "test": "gulp test",
+    "prepublish": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hellojwilde/node-safebrowsing"
+  },
+  "license": "MIT"
 }
