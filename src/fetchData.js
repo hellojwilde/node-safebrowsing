@@ -32,6 +32,8 @@ var fetchData = Promise.coroutine(function*(cache, apiKey, lists) {
       return fetchDataRedirect(cache, list.name, url);
     });
   });
+
+  return listChunks.delay;
 });
 
 module.exports = fetchData;
