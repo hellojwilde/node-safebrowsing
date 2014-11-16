@@ -2,31 +2,22 @@
   "name": "node-safebrowsing",
   "version": "0.1.0",
   "devDependencies": {
-    "deeper": "^1.0.2",
     "expect": "^0.1.1",
     "fakeredis": "^0.2.1",
     "gulp": "^3.8.10",
-    "gulp-dev": "0.0.2",
     "gulp-jstransform": "hellojwilde/gulp-jstransform",
     "gulp-mocha": "^1.1.1",
     "gulp-regenerator": "^2.0.0",
-    "gulp-shell": "^0.2.10",
-    "gulp-util": "^3.0.1",
-    "merge": "^1.2.0",
-    "through2": "^0.6.3"
+    "gulp-util": "^3.0.1"
   },
   "dependencies": {
     "bluebird": "^2.3.11",
     "bytebuffer": "^3.5.4",
-    "invariant": "^1.0.2",
-    "ip": "^0.3.2",
     "lodash": "^2.4.1",
-    "nearley": "^1.0.1",
     "nock": "^0.50.0",
     "protobufjs": "^3.8.0",
     "redis": "^0.12.1",
     "regenerator": "^0.7.7",
-    "request": "^2.48.0",
     "request-promise": "^0.3.1"
   },
   "scripts": {
