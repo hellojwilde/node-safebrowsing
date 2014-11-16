@@ -38,8 +38,8 @@ var FullHashRequestType = {
     ].join('\n');
   },
 
-  parseResponseBody: function(rsp) {
-    var cursor = new StringCursor(rsp);
+  parseResponseBody: function(buf) {
+    var cursor = new StringCursor(buf.toString('binary'));
     var result = {
       delay: parseInt(cursor.chompUntil('\n'), 10), 
       lists: []
