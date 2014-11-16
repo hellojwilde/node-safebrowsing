@@ -5,6 +5,8 @@ var FakeRedis = require('fakeredis');
 var Promise = require('bluebird')
 var RedisCache = require('../RedisCache');
 
+FakeRedis.fast = true;
+
 describe('RedisCache', function() {
   var listName = 'woot';
 
