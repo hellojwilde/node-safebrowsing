@@ -79,7 +79,7 @@ app.post('/check', function(req, res) {
   //  
   // ### Inconclusive Filtering
   // 
-  //  - `results.hasInconclusive()` Returns true iff inconclusive on any list.
+  //  - `results.getInconclusive()` Returns a list of the inconclusive results.
   //  - `results.getInconclusiveRequest()` Returns an object you can pass to 
   //    Fetcher.fetchInconclusive to get details.
   //  - `results.resolveInconclusive()` Provided that fetchInconclusive has 
