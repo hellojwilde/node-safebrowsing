@@ -22,7 +22,7 @@ Implementation Progress
     - [x] [full-length hashes](https://github.com/hellojwilde/node-safebrowsing/blob/master/src/io/FullHashRequestType.js).
 - [x] Fetch methods wrapping the above and the persistence layer to perform synchronization operations. *Implemented, but need further tests.*
 - [ ] URL canonicalizer, with proper support for encoding IDNs. *Partially implemented.*
-- [ ] Lookup expression generator, to create the different variants of canonicalized URLs to hash and match against hash prefixes and full-length hashes.
+- [x] Lookup expression generator, to create the different variants of canonicalized URLs to hash and match against hash prefixes and full-length hashes.
 - [ ] `Fetcher` class to schedule data fetches from the API. It should automatically fetch data at specified intervals, obey backoff constraints, and where possible batch full-length hash requests.
 - [ ] `Matcher` and `MatchResults` classes, to wrap the URL canonicalizer, lookup expression generator, and persistence layer to cleanly perform lookups.
 
