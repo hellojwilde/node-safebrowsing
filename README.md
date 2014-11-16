@@ -3,7 +3,7 @@ node-safebrowsing
 
 **(Work in progress, see notes below.)**
 
-[![Build Status](https://magnum.travis-ci.com/hellojwilde/node-safebrowsing.svg?token=GtksG1Yp9pNwPxssKE8R&branch=master)](https://magnum.travis-ci.com/hellojwilde/node-safebrowsing)
+[![Build Status](https://travis-ci.org/hellojwilde/node-safebrowsing.svg?branch=master)](https://travis-ci.org/hellojwilde/node-safebrowsing)
 
 This module is a client for Google Safe Browsing API v3. It aims to be able to synchronize an *offline, encrypted database* of URLs pointing to potentially malicious content, and perform fast lookups against that database.
 
