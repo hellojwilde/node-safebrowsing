@@ -23,15 +23,15 @@ var fetchData = Promise.coroutine(function*(cache, apiKey, lists) {
     lists: listChunkRanges
   });
 
-  if (listChunks.isReset) {
-    throw new Error('Reset not implemented');
-  }
+  // TODO: support pleasereset.
 
-  yield Promise.each(listChunks.lists, function(list) {
-    return Promise.each(list.urls, function(url) {
+  yield Promise.each(listChunks.lists, Promise.coroutine(function*(list) {
+    // TODO: support list chunk expiration.
+
+    yield Promise.each(list.urls, function(url) {
       return fetchDataRedirect(cache, list.name, url);
     });
-  });
+  }));
 
   return listChunks.delay;
 });
