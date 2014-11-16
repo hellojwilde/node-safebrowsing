@@ -147,8 +147,6 @@ class RedisCache {
     hashes.forEach((hash, idx) => 
       interleaved[hash] = JSON.stringify(metadata[idx] || {}));
 
-    console.log(interleaved);
-
     var prefixDetailsKey = getPrefixDetailsKey(listName, prefix);
     var transaction = this._client.multi()
       .hmset(prefixDetailsKey, interleaved)
