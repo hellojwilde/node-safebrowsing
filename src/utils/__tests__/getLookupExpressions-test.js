@@ -2,7 +2,7 @@ var _ = require('lodash');
 var expect = require('expect');
 var getLookupExpressions = require('../getLookupExpressions');
 
-describe.only('getLookupExpressions', function() {
+describe('getLookupExpressions', function() {
   it('should work with http://a.b.c/1/2.html?param=1', function() {
     expect(_.difference(
       getLookupExpressions('http://a.b.c/1/2.html?param=1'),
