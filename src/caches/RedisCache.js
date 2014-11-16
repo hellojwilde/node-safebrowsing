@@ -10,12 +10,8 @@ function getChunkKey(listName, chunkID) {
   return `safe:list:${listName}:chunk:${chunkID}`;
 }
 
-function getPendingSubKey(listName) {
-  return `safe:list:${listName}:sub`;
-}
-
-function getPendingSubChunk(chunkID, prefix) {
-  return `${chunkID}:${prefix}`;
+function getPendingSubKey(listName, chunkID) {
+  return `safe:list:${listName}:chunk:${chunkID}:sub`;
 }
 
 function getPrefixesKey(listName) {
@@ -86,22 +82,28 @@ class RedisCache {
 
   hasPendingSubChunk(listName, chunkID, prefix) {
     return this._client.sismemberAsync(
-      getPendingSubKey(listName),
-      getPendingSubChunk(chunkID, prefix)
+      getPendingSubKey(listName, chunkID),
+      prefix
     ).then((hasSubChunk) => !!hasSubChunk);
   }
 
   putPendingSubChunk(listName, chunkID, prefix) {
     return this._client.saddAsync(
-      getPendingSubKey(listName), 
-      getPendingSubChunk(chunkID, prefix)
+      getPendingSubKey(listName, chunkID), 
+      prefix
     );
   }
 
   dropPendingSubChunk(listName, chunkID, prefix) {
     return this._client.sremAsync(
-      getPendingSubKey(listName),
-      getPendingSubChunk(chunkID, prefix)
+      getPendingSubKey(listName, chunkID),
+      prefix
+    );
+  }
+
+  dropPendingSubChunksByChunkID(listName, chunkID) {
+    return this._client.delAsync(
+      getPendingSubKey(listName, chunkID)
     );
   }
 

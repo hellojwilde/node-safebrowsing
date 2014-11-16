@@ -8,9 +8,18 @@ var fetchDataRedirect = require('./fetchDataRedirect');
 var regeneratorRuntime = require('regenerator/runtime');
 var sendRequest = require('./io/sendRequest');
 
+function expireRanges(cache, listName, type, ranges) {
+  var chunkIDs = Ranges.getNumbersForRanges(ranges);
+  return Promise.each(chunkIDs, Promise.coroutine(function*(chunkID) {
+    var prefixes = yield cache.getChunkByID(listName, chunkID);
+    yield cache.dropPrefixes(listName, prefixes);
+    yield cache.dropPendingSubChunksByChunkID(listName, chunkID);
+    yield cache.dropChunkByID(listName, type, chunkID);
+  }));
+};
+
 var fetchData = Promise.coroutine(function*(cache, apiKey, lists) {
   var listNames = lists.map((list) => list.name);
-
   var listChunkRanges = yield Promise.map(listNames, function(listName) {
     return Promise.props({
       add: cache.getChunkIDs(listName, ChunkTypes.ADD),
@@ -23,11 +32,13 @@ var fetchData = Promise.coroutine(function*(cache, apiKey, lists) {
     lists: listChunkRanges
   });
 
-  // TODO: support pleasereset.
+  if (listChunks.isReset) {
+    throw new Error('r:pleasereset is not implemented');
+  }
 
   yield Promise.each(listChunks.lists, Promise.coroutine(function*(list) {
-    // TODO: support list chunk expiration.
-
+    yield expireRanges(cache, list.name, ChunkTypes.ADD, list.expireAdd);
+    yield expireRanges(cache, list.name, ChunkTypes.SUB, list.expireSub);
     yield Promise.each(list.urls, function(url) {
       return fetchDataRedirect(cache, list.name, url);
     });
