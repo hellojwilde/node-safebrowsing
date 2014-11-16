@@ -29,6 +29,7 @@ node_modules
 
 # Compiled directory contents
 lib
+coverage
 
 # The devil.
 .DS_Store
