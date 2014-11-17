@@ -23,10 +23,10 @@ var fetchDataRedirect = Promise.coroutine(function*(cache, listName, url) {
     }
 
     if (type === ChunkTypes.ADD) {
-      yield updateAddChunkPrefixes(listName, chunkID, prefixes);
+      yield updateAddChunkPrefixes(cache, listName, chunkID, prefixes);
     } else {
       var addIDs = chunk.add_numbers;
-      yield updateSubChunkPrefixes(listName, chunkID, prefixes, addIDs);
+      yield updateSubChunkPrefixes(cache, listName, chunkID, prefixes, addIDs);
     }
 
     yield cache.putChunk(listName, type, chunkID, prefixes);

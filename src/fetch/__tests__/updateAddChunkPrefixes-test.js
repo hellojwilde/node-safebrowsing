@@ -28,6 +28,8 @@ describe('updateAddChunkPrefixes', function() {
   it('should add all if none pending', function() {
     var prefixes = ['abce', 'abcd', 'aghe'];
     var mockCache = sinon.mock(cache);
+
+    // TODO (jwilde): Check arguments called on these methods.
     mockCache.expects('hasPendingSubChunk').thrice()
       .returns(Promise.resolve(false));
     mockCache.expects('dropPendingSubChunk').never();
@@ -45,8 +47,9 @@ describe('updateAddChunkPrefixes', function() {
   it('should skip + drop pending', function() {
     var prefixes = ['abce', 'abd'];
     var chunkID = 1234;
-
     var mockCache = sinon.mock(cache);
+
+    // TODO (jwilde): check arguments passed to each of these methods.
     mockCache.expects('hasPendingSubChunk').twice()
       .returns(Promise.resolve(true));
     mockCache.expects('dropPendingSubChunk').twice()

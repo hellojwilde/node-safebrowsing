@@ -52,6 +52,7 @@ describe('fetchData', function() {
     })(function() {
       return fetchData(cache, 'abc', ['my happy list'])
         .then(function() {
+          // TODO (jwilde): Check the arguments passed to these methods.
           assert(mockExpireChunkRanges.calledTwice);
           assert(mockFetchDataRedirect.calledTwice);
         });

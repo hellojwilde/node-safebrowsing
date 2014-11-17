@@ -28,8 +28,9 @@ describe('updateSubChunkPrefixes', function() {
   it('should call putPendingSubChunk if no chunk ids there', function() {
     var prefixes = ['abce', 'abcd', 'aghe'];
     var addIDs = [1, 2, 3];
-
     var mockCache = sinon.mock(cache);
+
+    // TODO (jwilde): Check more of the arguments that are passed to these.
     mockCache.expects('hasChunkID').thrice()
       .returns(Promise.resolve(false));
     mockCache.expects('putPendingSubChunk').thrice()
@@ -49,8 +50,9 @@ describe('updateSubChunkPrefixes', function() {
     var prefixes = ['abce', 'abd'];
     var addIDs = [1, 2];
     var chunkID = 1234;
-
     var mockCache = sinon.mock(cache);
+
+    // TODO (jwilde): Check more of the arguments passed to these.
     mockCache.expects('hasChunkID').twice()
       .returns(Promise.resolve(true));
     mockCache.expects('putPendingSubChunk').never();
