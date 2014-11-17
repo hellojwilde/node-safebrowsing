@@ -3,6 +3,9 @@ var Promise = require('bluebird');
 
 var regeneratorRuntime = require('regenerator/runtime');
 
+/**
+ * Drops all information related to the specified chunk ranges in the list.
+ */
 function expireChunkRanges(cache, listName, type, ranges) {
   var chunkIDs = Ranges.getNumbersForRanges(ranges);
   return Promise.each(chunkIDs, Promise.coroutine(function*(chunkID) {
