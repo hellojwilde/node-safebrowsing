@@ -1,22 +1,13 @@
 var ChunkTypes = require('./ChunkTypes');
-var DataRequestType = require('./io/DataRequestType');
+var DataRequestType = require('../io/DataRequestType');
 var Promise = require('bluebird');
-var Ranges = require('./utils/Ranges');
+var Ranges = require('../util/Ranges');
 
 var _ = require('lodash');
 var fetchDataRedirect = require('./fetchDataRedirect');
 var regeneratorRuntime = require('regenerator/runtime');
-var sendRequest = require('./io/sendRequest');
-
-function expireRanges(cache, listName, type, ranges) {
-  var chunkIDs = Ranges.getNumbersForRanges(ranges);
-  return Promise.each(chunkIDs, Promise.coroutine(function*(chunkID) {
-    var prefixes = yield cache.getChunkByID(listName, chunkID);
-    yield cache.dropPrefixes(listName, prefixes);
-    yield cache.dropPendingSubChunksByChunkID(listName, chunkID);
-    yield cache.dropChunkByID(listName, type, chunkID);
-  }));
-};
+var sendRequest = require('../io/sendRequest');
+var expireChunkRanges = require('./expireChunkRanges');
 
 var fetchData = Promise.coroutine(function*(cache, apiKey, lists) {
   var listNames = lists.map((list) => list.name);
@@ -34,15 +25,15 @@ var fetchData = Promise.coroutine(function*(cache, apiKey, lists) {
 
   if (listChunks.isReset) {
     throw new Error('r:pleasereset is not implemented');
+  } else {
+    yield Promise.each(listChunks.lists, Promise.coroutine(function*(list) {
+      yield expireChunkRanges(cache, list.name, ChunkTypes.ADD, list.expireAdd);
+      yield expireChunkRanges(cache, list.name, ChunkTypes.SUB, list.expireSub);
+      yield Promise.each(list.urls, function(url) {
+        return fetchDataRedirect(cache, list.name, url);
+      });
+    }));
   }
-
-  yield Promise.each(listChunks.lists, Promise.coroutine(function*(list) {
-    yield expireRanges(cache, list.name, ChunkTypes.ADD, list.expireAdd);
-    yield expireRanges(cache, list.name, ChunkTypes.SUB, list.expireSub);
-    yield Promise.each(list.urls, function(url) {
-      return fetchDataRedirect(cache, list.name, url);
-    });
-  }));
 
   return listChunks.delay;
 });

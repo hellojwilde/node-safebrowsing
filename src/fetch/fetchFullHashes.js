@@ -1,9 +1,9 @@
 var ChunkTypes = require('./ChunkTypes');
-var FullHashRequestType = require('./io/FullHashRequestType');
+var FullHashRequestType = require('../io/FullHashRequestType');
 var Promise = require('bluebird');
 
 var regeneratorRuntime = require('regenerator/runtime');
-var sendRequest = require('./io/sendRequest');
+var sendRequest = require('../io/sendRequest');
 
 var fetchFullHashes = Promise.coroutine(function*(cache, apiKey, prefix) {
   var hashes = yield sendRequest(FullHashRequestType, {
