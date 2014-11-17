@@ -6,7 +6,7 @@ var expect = require('expect');
 var updateAddChunkPrefixes = require('../updateAddChunkPrefixes');
 var sinon = require('sinon');
 
-describe.only('expireChunkRanges', function() {
+describe('expireChunkRanges', function() {
   var cache = new RedisCache(FakeRedis.createClient());
   var listName = 'list';
 
