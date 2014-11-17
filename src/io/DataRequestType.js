@@ -1,4 +1,4 @@
-var Ranges = require('../utils/Ranges');
+var Ranges = require('../util/Ranges');
 
 var _ = require('lodash');
 var package = require('../../package.json');

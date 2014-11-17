@@ -1,4 +1,4 @@
-var StringCursor = require('../utils/StringCursor');
+var StringCursor = require('../util/StringCursor');
 
 var _ = require('lodash');
 var assert = require('assert');
