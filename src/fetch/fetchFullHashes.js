@@ -16,6 +16,8 @@ var fetchFullHashes = Promise.coroutine(function*(cache, apiKey, prefix) {
       list.name, prefix, list.hashes, hashes.delay, list.metadata
     );
   });
+
+  return hashes.delay;
 });
 
 module.exports = fetchFullHashes;
