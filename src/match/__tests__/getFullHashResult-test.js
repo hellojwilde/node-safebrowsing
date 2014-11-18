@@ -11,22 +11,26 @@ describe('getFullHashResult', function() {
   var cache = new RedisCache(FakeRedis.createClient());
   var listName = 'list';
   var list = {name:listName}
-  var prefix = 'abc';
-  var hash = 'abcdef'
+  var hashObject = {
+    prefix: 'abc',
+    hash: 'abcdef'
+  };
 
   function testWithResults(hasPrefixDetails, isPrefixDetailsMatch, resultType) {
     var mockCache = sinon.mock(cache);
     mockCache.expects('hasPrefixDetails').once()
-      .withArgs(listName, prefix)
+      .withArgs(listName, hashObject.prefix)
       .returns(Promise.resolve(hasPrefixDetails));
     mockCache.expects('isPrefixDetailsMatch').once()
-      .withArgs(listName, prefix, hash)
+      .withArgs(listName, hashObject.prefix, hashObject.hash)
       .returns(Promise.resolve(isPrefixDetailsMatch));
     mockCache.expects('getPrefixDetailsMetadata').never();
 
-    return getFullHashResult(cache, {name:listName}, prefix, hash)
+    return getFullHashResult(cache, {name:listName}, hashObject)
       .then(function(result) {
         expect(result.resultType).toBe(resultType);
+        expect(result.hashObject).toEqual(hashObject);
+
         mockCache.verify();
         mockCache.restore();
       });
@@ -44,19 +48,21 @@ describe('getFullHashResult', function() {
     var metadata = {woot: true};
     var mockCache = sinon.mock(cache);
     mockCache.expects('hasPrefixDetails').once()
-      .withArgs(listName, prefix)
+      .withArgs(listName, hashObject.prefix)
       .returns(Promise.resolve(true));
     mockCache.expects('isPrefixDetailsMatch').once()
-      .withArgs(listName, prefix, hash)
+      .withArgs(listName, hashObject.prefix, hashObject.hash)
       .returns(Promise.resolve(true));
     mockCache.expects('getPrefixDetailsMetadata').once()
-      .withArgs(listName, prefix, hash)
+      .withArgs(listName, hashObject.prefix, hashObject.hash)
       .returns(Promise.resolve(metadata));
 
-    return getFullHashResult(cache, {name:listName}, prefix, hash)
+    return getFullHashResult(cache, {name:listName}, hashObject)
       .then(function(result) {
         expect(result.resultType).toBe(MatchResultTypes.MATCH);
         expect(result.metadata).toEqual(metadata);
+        expect(result.hashObject).toEqual(hashObject);
+
         mockCache.verify();
         mockCache.restore();
       });
