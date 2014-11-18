@@ -6,4 +6,4 @@ var MatchResultTypes = keyMirror({
   MATCH: null
 });
 
-module.exports = MatchTypes;
+module.exports = MatchResultTypes;
