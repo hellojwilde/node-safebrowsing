@@ -1,6 +1,6 @@
 {
   "name": "safebrowsing",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "(Work in progress.) Client for the Google Safe Browsing API v3.",
   "author": "Jonathan Wilde <hello@jwilde.me>",
   "devDependencies": {

@@ -35,7 +35,7 @@ var FullHashRequestType = {
     return [
       [prefixSize, prefixes.length * prefixSize].join(':'),
       prefixes.join('')
-    ].join('\n');
+    ].join('\n') + '\n';
   },
 
   parseResponseBody: function(buf) {

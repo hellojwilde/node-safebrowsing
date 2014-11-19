@@ -1,4 +1,5 @@
 var DefaultLists = require('../list/DefaultLists');
+var Promise = require('bluebird');
 
 var _ = require('lodash');
 var assert = require('assert');
@@ -8,6 +9,8 @@ var moment = require('moment');
 
 function getDataDelayForErrorCount(errorCount) {
   assert(errorCount > 0);
+
+  console.log(errorCount);
 
   var delay = 0;
   if (errorCount === 1) {
@@ -33,6 +36,7 @@ class Fetcher {
     this.apiKey = apiKey;
     this.lists = optLists || DefaultLists;
 
+    this._dataIsFetching = false;
     this._dataFetcherPromise = null;
     this._dataErrorCount = 0;
     this._dataDelay = 0;
@@ -41,48 +45,43 @@ class Fetcher {
     this._inconclusiveBackoffErrorCount = 0;
     this._inconclusiveNextAllowedFetchTime = moment();
 
-    this.startFetchingData();
+    this.startFetchingData()
   }
 
   getDataFetchingStatus() {
     return {
+      isFetching: this._dataIsFetching,
       errorCount: this._dataErrorCount,
       delay: this._dataDelay
     };
   }
 
   startFetchingData() {
-    var self = this;
+    this._dataIsFetching = true;
 
-    this._dataFetcherPromise = Promise.coroutine(function*() {
-      var delayInSecs;
-
-      while(1) {
-        try {
-          delayInSecs = yield fetchData(self.cache, self.apiKey, self.lists);
-
-          self._dataDelay = delayInSecs * 1000;
-          self._dataErrorCount = 0;
-        } catch(e) {
-          self._dataErrorCount++;
-          self._dataDelay = getDataDelayForErrorCount(self._dataErrorCount);
+    fetchData(this.cache, this.apiKey, this.lists)
+      .then(function(delayInSecs) {
+        this._dataDelay = delayInSecs * 1000;
+        this._dataErrorCount = 0;
+      }.bind(this))
+      .catch(function(e) {
+        this._dataErrorCount++;
+        this._dataDelay = getDataDelayForErrorCount(this._dataErrorCount);
+      }.bind(this))
+      .then(function() {
+        if (this._dataIsFetching) {
+          setTimeout(() => this.startFetchingData(), this._dataDelay);
         }
-
-        yield Promise.delay(self._dataDelay * 1000);
-      }
-    }).cancellable();
-
-    return this._dataFetcherPromise;
+      }.bind(this));
   }
 
   stopFetchingData() {
-    return this._dataFetcherPromise.cancel('STOP');
+    this._dataIsFetching = false;
   }
 
   getInconclusiveFetchingStatus() {
     return {
       lastErrorTime: this._inconclusiveLastErrorTime,
-      inBackoffMode: this._inconclusiveInBackoffMode,
       backoffErrorCount: this._inconclusiveBackoffErrorCount,
       nextAllowedFetchTime: this._inconclusiveNextAllowedFetchTime
     };

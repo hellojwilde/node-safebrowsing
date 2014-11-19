@@ -42,7 +42,7 @@ var DataRequestType = {
       body.push([key, chunkList.join(':')].join(';'));
     });
 
-    return body.join('\n');
+    return body.join('\n') + '\n';
   },
 
   parseResponseBody: function(body) {
