@@ -5,6 +5,7 @@ var regeneratorRuntime = require('regenerator/runtime');
 
 var getFullHashResult = Promise.coroutine(function*(cache, list, hashObject) {
   var hashResult = {
+    list: list,
     resultType: null,
     hashObject: hashObject,
     metadata: {}

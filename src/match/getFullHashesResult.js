@@ -6,6 +6,7 @@ var getFullHashResult = require('./getFullHashResult');
 
 var getFullHashesResult = Promise.coroutine(function*(cache, list, hashObjects) {
   var fullHashesResult = {
+    list: list,
     resultType: null,
     hashObjects: [],
     metadata: []
