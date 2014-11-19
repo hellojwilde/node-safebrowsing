@@ -34,7 +34,7 @@ describe('DataRequestType', function() {
         lists: lists
       })).toBe(
         'googpub-phish-shavar;a:1-3,5,8:s:4-5\n' +
-        'acme-white-shavar;a:1-7:s:1-2'
+        'acme-white-shavar;a:1-7:s:1-2\n'
       );
     });
 
@@ -45,7 +45,7 @@ describe('DataRequestType', function() {
       })).toBe(
         's;200\n' +
         'googpub-phish-shavar;a:1-3,5,8:s:4-5\n' +
-        'acme-white-shavar;a:1-7:s:1-2'
+        'acme-white-shavar;a:1-7:s:1-2\n'
       );
     });
   });

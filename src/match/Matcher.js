@@ -23,7 +23,7 @@ class Matcher {
     return Promise.map(
       lists, 
       (list) => getListResult(this._cache, list, prefixes, exprs)
-    ).then((matches) => new MatchResults(url, matches, this, optLists));
+    ).then((matches) => new MatchResults(url, matches, this, lists));
   }
 }
 

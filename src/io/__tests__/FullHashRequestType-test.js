@@ -22,7 +22,7 @@ describe('FullHashRequestType', function() {
         prefixes: ['abcd', 'defg', 'jklh', 'dsfa']
       })).toBe(
         '4:16\n' +
-        'abcddefgjklhdsfa'
+        'abcddefgjklhdsfa\n'
       );
     });
   });

@@ -10,8 +10,16 @@ class MatchResults {
     this._lists = lists;
   }
 
-  getResultsByMatchType(matchType) {
-    return this._results.filter((res) => res.matchType === matchType);
+  getInconclusive(matchType) {
+    return this._results.filter((res) => res.matchType === MatchResultTypes.INCONCLUSIVE);
+  }
+
+  getMatch(matchType) {
+    return this._results.filter((res) => res.matchType === MatchResultTypes.MATCH);
+  }
+
+  getNoMatch(matchType) {
+    return this._results.filter((res) => res.matchType === MatchResultTypes.INCONCLUSIVE);
   }
 
   getInconclusiveRequest() {
@@ -23,7 +31,7 @@ class MatchResults {
     ));
   }
 
-  resolveInconclusives() {
+  resolveInconclusive() {
     // TODO: More selectively match only the inconclusive results.
     // Ideally, we'd make the minimum number of cache requests here.
     return this._matcher.match(this._url, this._lists);

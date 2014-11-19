@@ -1,7 +1,7 @@
-var Express = require('express');
 var Redis = require('redis');
-var Safebrowsing = require('node-safebrowsing');
+var Safebrowsing = require('../lib/index.js');
 
+var express = require('express');
 var bodyParser = require('body-parser');
 
 // There's two core pieces of configuration information:
@@ -47,11 +47,17 @@ var matcher = new Safebrowsing.Matcher(cache);
 // We're going to create a POST endpoint that you can call and then it'll 
 // give you back information on whether the list was found in any blacklists.
 
-var app = Express();
+var app = express();
 
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
+app.set('views', './views');
+app.set('view engine', 'ejs');
 
-app.post('/check', function(req, res) {
+app.get('/', function(req, res) {
+  res.render('index');
+});
+
+app.post('/', function(req, res) {
   var url = req.body.url;
 
   // We can check whether something is in our cached set of list data with
@@ -73,9 +79,13 @@ app.post('/check', function(req, res) {
   // It returns a MatchResults object, that lets you easily filter the matching
   // results futher for use in a UI or to do detail fetches.
   // 
+  // ### No Match Filtering
+  // 
+  //  - `results.getNoMatch()` Returns a list of the list non-matches.
+  // 
   // ### Match Filtering
   // 
-  //  - `results.getMatches()` Returns a list of the list matches and metadata.
+  //  - `results.getMatch()` Returns a list of the list matches and metadata.
   //  
   // ### Inconclusive Filtering
   // 
@@ -88,7 +98,7 @@ app.post('/check', function(req, res) {
 
   matches
     .then(function(results) {
-      if (results.hasInconclusive()) {
+      if (results.getInconclusive().length > 0) {
         return fetcher.fetchInconclusive(results.getInconclusiveRequest())
           .then(function() { return results.resolveInconclusive(); });
       }
@@ -97,14 +107,16 @@ app.post('/check', function(req, res) {
     .then(function(results) {
       res.json({
         url: url,
-        matches: results.getMatches(),
+        results: results.getMatch()
       });
     });
 });
 
-var server = app.listen(3000, function () {
+var server = app.listen(3001, function () {
   var host = server.address().address;
   var port = server.address().port;
 
   console.log('Example app listening at http://%s:%s', host, port);
 });
+
+module.exports = app;
