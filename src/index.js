@@ -1,6 +1,6 @@
 var Safebrowsing = {
-  fetchData: require('./fetchData'),
-  fetchFullHashes: require('./fetchFullHashes'),
+  Matcher: require('./match/Matcher'),
+  Fetcher: require('./fetch/Fetcher'),
   RedisCache: require('./cache/RedisCache')
 };
 

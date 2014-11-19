@@ -2,11 +2,11 @@ var DefaultLists = require('../list/DefaultLists');
 var MatchResults = require('./MatchResults');
 var MatchResultTypes = require('./MatchResultTypes');
 var Promise = require('bluebird');
+var Hashes = require('../util/Hashes');
 
 var _ = require('lodash');
 var getCanonicalizedURL = require('../util/getCanonicalizedURL');
 var getLookupExpressions = require('../util/getLookupExpressions');
-var getSha256Prefix = require('../util/getSha256Prefix');
 var getListResult = require('./getListResult');
 
 class Matcher {
@@ -18,7 +18,7 @@ class Matcher {
     var lists = optLists || DefaultLists;
     var canonicalized = getCanonicalizedURL(url);
     var exprs = getLookupExpressions(canonicalized);
-    var prefixes = exprs.map((expr) => getSha256Prefix(expr, 4));
+    var prefixes = exprs.map((expr) => Hashes.getHashObject(expr));
 
     return Promise.map(
       lists, 
