@@ -20,11 +20,11 @@ Implementation Progress
     - [x] [data](https://github.com/hellojwilde/node-safebrowsing/blob/master/src/io/DataRequestType.js),
     - [x] [data redirects](https://github.com/hellojwilde/node-safebrowsing/blob/master/src/io/DataRedirectRequestType.js), and 
     - [x] [full-length hashes](https://github.com/hellojwilde/node-safebrowsing/blob/master/src/io/FullHashRequestType.js).
-- [x] Fetch methods wrapping the above and the persistence layer to perform synchronization operations. *Implemented, but need further tests.*
-- [ ] URL canonicalizer, with proper support for encoding IDNs. *Partially implemented.*
+- [x] Fetch methods wrapping the above and the persistence layer to perform synchronization operations.
+- [v] URL canonicalizer, with proper support for encoding IDNs. *Need further tests.*
 - [x] Lookup expression generator, to create the different variants of canonicalized URLs to hash and match against hash prefixes and full-length hashes.
-- [ ] `Fetcher` class to schedule data fetches from the API. It should automatically fetch data at specified intervals, obey backoff constraints, and where possible batch full-length hash requests.
-- [ ] `Matcher` and `MatchResults` classes, to wrap the URL canonicalizer, lookup expression generator, and persistence layer to cleanly perform lookups.
+- [x] `Fetcher` class to schedule data fetches from the API. It should automatically fetch data at specified intervals, obey backoff constraints, and where possible batch full-length hash requests. *Need further tests.*
+- [x] `Matcher` and `MatchResults` classes, to wrap the URL canonicalizer, lookup expression generator, and persistence layer to cleanly perform lookups. *Need further tests.*
 
 License
 -------
