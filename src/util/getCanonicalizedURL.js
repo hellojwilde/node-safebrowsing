@@ -86,8 +86,6 @@ function getCanonicalizedURL(url) {
     `${f.protocol}://${f.hostname}${f.port ? ':'+f.port:''}`+
     `${f.pathname}${search ? '?'+search:''}`
   );
-
-  return getEncodedURI(URL.format(formatted));
 }
 
 module.exports = getCanonicalizedURL;

@@ -12,7 +12,7 @@ var getFullHashesResult = rewire('../getFullHashesResult');
 describe('getFullHashesResult', function() {
   var cache = new RedisCache(FakeRedis.createClient());
   var listName = 'list';
-  var list = {name: listName}
+  var list = {name: listName};
   var hashObjects = [
     {prefix: 'abjhkc', hash: 'abcdef'},
     {prefix: 'dfgd', hash: 'sdfafsdfa'},

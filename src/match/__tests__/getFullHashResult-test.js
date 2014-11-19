@@ -10,7 +10,7 @@ var sinon = require('sinon');
 describe('getFullHashResult', function() {
   var cache = new RedisCache(FakeRedis.createClient());
   var listName = 'list';
-  var list = {name:listName}
+  var list = {name:listName};
   var hashObject = {
     prefix: 'abc',
     hash: 'abcdef'

@@ -46,6 +46,6 @@ describe('fetchFullHashes', function() {
           mockCache.verify();
           mockCache.restore();
         });
-    })
+    });
   });
 });

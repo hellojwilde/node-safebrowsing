@@ -15,7 +15,7 @@ function updateSubChunkPrefixes(cache, listName, chunkID, prefixes, addIDs) {
             .then(() => false);
         }
         return true;
-      })
+      });
   }).then((foundPrefixes) => cache.dropPrefixes(listName, foundPrefixes));
 }
 

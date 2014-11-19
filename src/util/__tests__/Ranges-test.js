@@ -11,7 +11,7 @@ describe('Ranges', function() {
     it('should return ranges for numbers, inclusive', function() {
       expect(Ranges.getRangesForNumbers([1,2,3,4,7,9,10]))
         .toEqual([[1,4],7,[9,10]]);
-    })
+    });
   });
 
   describe('getNumbersForRanges', function() {
@@ -22,7 +22,7 @@ describe('Ranges', function() {
     it('should return numbers for ranges, inclusive', function() {
       expect(Ranges.getNumbersForRanges([[1,4],7,[9,10]]))
         .toEqual([1,2,3,4,7,9,10]);
-    })
+    });
   });
 
   describe('formatRanges', function() {

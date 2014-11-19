@@ -14,6 +14,6 @@ function expireChunkRanges(cache, listName, type, ranges) {
     yield cache.dropPendingSubChunksByChunkID(listName, chunkID);
     yield cache.dropChunkByID(listName, type, chunkID);
   }));
-};
+}
 
 module.exports = expireChunkRanges;

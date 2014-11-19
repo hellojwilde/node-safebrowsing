@@ -27,7 +27,7 @@ describe('StringCursor', function () {
       expect(cursor.chompUntil(':')).toBe('dsfa');
       expect(cursor.chompUntil(':')).toBe('sadfggdfsg');
       expect(cursor.chompUntil(':')).toBe('');
-    })
+    });
   });
 
   describe('chompUntilIfExists', function() {
@@ -40,7 +40,7 @@ describe('StringCursor', function () {
       expect(cursor.chompUntilIfExists(':')).toBe('dsfa');
       expect(cursor.chompUntilIfExists(':')).toBe('sadfggdfsg');
       expect(cursor.chompUntilIfExists('$')).toBe(null);
-    })
+    });
   });
 
   describe('chompWhile', function() {

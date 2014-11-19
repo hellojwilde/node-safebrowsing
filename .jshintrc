@@ -1,0 +1,11 @@
+{
+  "globals": {
+    "Promise": true,
+    "it": true,
+    "describe": true
+  },
+  "esnext": true,
+  "undef": true,
+  "eqeqeq": true,
+  "node": true
+}

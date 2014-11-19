@@ -54,7 +54,7 @@ describe('getListResult', function() {
           resultType: MatchResultTypes.MATCH,
           hashObjects: hashObjects,
           metadata: []
-        }))
+        }));
     });
 
     return getListResult.__with__({

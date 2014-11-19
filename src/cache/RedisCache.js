@@ -1,8 +1,6 @@
 var Promise = require('bluebird');
 
-var _ = require('lodash');
-
-function getChunkSetKey(listName, type) {
+function getChunkSetKey(listName, type) { 
   return `safe:list:${listName}:chunks:${type}`;
 }
 

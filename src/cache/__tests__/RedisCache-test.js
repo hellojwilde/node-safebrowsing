@@ -2,7 +2,7 @@ var expect = require('expect');
 
 var ChunkTypes = require('../../fetch/ChunkTypes');
 var FakeRedis = require('fakeredis');
-var Promise = require('bluebird')
+var Promise = require('bluebird');
 var RedisCache = require('../RedisCache');
 
 FakeRedis.fast = true;
@@ -149,7 +149,7 @@ describe('RedisCache', function() {
         .then(() => cache.isPrefixDetailsMatch(listName, prefix, hash))
         .then((actualMatch) => expect(actualMatch).toBe(true))
         .then(() => cache.getPrefixDetailsMetadata(listName, prefix, hash))
-        .then((actualMeta) => expect(actualMeta).toEqual(meta[0]))
+        .then((actualMeta) => expect(actualMeta).toEqual(meta[0]));
     });
   });
 });

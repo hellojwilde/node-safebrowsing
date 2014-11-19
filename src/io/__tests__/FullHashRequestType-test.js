@@ -42,7 +42,7 @@ describe('FullHashRequestType', function() {
             metadata: []
           }
         ]
-      })
+      });
     });
 
     it('should work with the multi list, metadata Google example', function() {
@@ -77,7 +77,7 @@ describe('FullHashRequestType', function() {
       expect(FullHashRequestType.parseResponseBody('900')).toEqual({
         delay: 900,
         lists: []
-      })
+      });
     });
   });
 });

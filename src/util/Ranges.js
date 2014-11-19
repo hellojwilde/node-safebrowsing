@@ -9,9 +9,9 @@ function getRangesForNumbers(numbers) {
     var last = _.last(list);
     var initial = _.initial(list);
 
-    if (_.isNumber(last) && last + 1 == item) {
+    if (_.isNumber(last) && last + 1 === item) {
       return initial.concat([[last, item]]);
-    } else if (_.isArray(last) && last[1] + 1 == item) {
+    } else if (_.isArray(last) && last[1] + 1 === item) {
       return initial.concat([[last[0], item]]);
     }
     
@@ -48,8 +48,8 @@ function parseRanges(formatted) {
     var section = formattedSection.split('-');
 
     if (section.length === 1) {
-      var number = parseInt(section[0], 10);
-      return isNaN(number) ? ranges : ranges.concat([number]);
+      var possibleNumber = parseInt(section[0], 10);
+      return isNaN(possibleNumber) ? ranges : ranges.concat([possibleNumber]);
     }
 
     var range = section.map((number) => parseInt(number, 10));
