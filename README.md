@@ -10,7 +10,7 @@ This module is a client for Google Safe Browsing API v3. It aims to be able to s
 Example
 -------
 
-For a taste what the target API is going to look like, check out the very well-commented (but non-functional until the upcoming work lands) [example app](https://github.com/hellojwilde/node-safebrowsing/blob/master/example/app.js).
+For a taste what the target API is going to look like, check out the very well-commented [example app](https://github.com/hellojwilde/node-safebrowsing/blob/master/example/app.js).
 
 Implementation Progress
 -----------------------
