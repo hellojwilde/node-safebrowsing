@@ -22,14 +22,14 @@ gulp.task('build-proto', function() {
 
 gulp.task('build', ['build-js', 'build-proto']);
 
-gulp.task('lint', function(done) {
+gulp.task('lint', function() {
   return gulp.src('src/**/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 })
 
 gulp.task('test', ['lint', 'build'], function(done) {
-  return gulp.src(['lib/**/*.js', '!lib/**/*-test.js'])
+  gulp.src(['lib/**/*.js', '!lib/**/*-test.js'])
     .pipe(instanbul())
     .on('finish', function() {
       gulp.src('lib/**/__tests__/*.js', {read: false})
